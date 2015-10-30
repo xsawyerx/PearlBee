@@ -85,6 +85,12 @@ __PACKAGE__->table("user");
   extra: {list => ["author","admin"]}
   is_nullable: 0
 
+=head2 can_publish
+
+  data_type: 'tinyint'
+  default_value: 1
+  is_nullable: 0
+
 =head2 activation_key
 
   data_type: 'varchar'
@@ -137,6 +143,8 @@ __PACKAGE__->add_columns(
     extra => { list => ["author", "admin"] },
     is_nullable => 0,
   },
+  "can_publish",
+  { data_type => "tinyint", default_value => 1, is_nullable => 0 },
   "activation_key",
   { data_type => "varchar", is_nullable => 1, size => 100 },
   "status",
@@ -236,8 +244,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-03-12 11:32:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:K9HSB67oau0IzWdJILumFg
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2015-10-29 14:15:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4iR3B+GubTMLJxRDUF0AKw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
@@ -329,6 +337,18 @@ sub allow {
   # welcome the user in an email
 
   $self->update({ status => 'deactivated' });
+}
+
+sub enable_publishing {
+  my $self = shift;
+
+  $self->update({ can_publish => 1 });
+}
+
+sub disable_publishing {
+  my $self = shift;
+
+  $self->update({ can_publish => 0 });
 }
 
 1;
