@@ -2,6 +2,18 @@ package PearlBee::Users;
 # ABSTRACT: User-related paths
 use Dancer2 appname => 'PearlBee';
 
+get '/sign-up' => sub {
+
+};
+
+get '/login' => sub {
+
+};
+
+get '/logout' => sub {
+
+};
+
 get '/profile' => sub {
 
 };
@@ -22,18 +34,6 @@ prefix '/dashboard' => sub {
     get '/settings' => sub {
 
     };
-};
-
-get '/sign-up' => sub {
-
-};
-
-get '/login' => sub {
-
-};
-
-get '/logout' => sub {
-
 };
 
 prefix '/users' => sub {
