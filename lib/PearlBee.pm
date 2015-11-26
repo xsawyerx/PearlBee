@@ -10,8 +10,9 @@ use PearlBee::Categories;
 use PearlBee::Tags;
 
 # main page
-get '/' => sub {
 
+get '/' => sub {
+    forward '/posts';
 };
 
 1;
