@@ -9,8 +9,15 @@ use PearlBee::Authors;
 use PearlBee::Categories;
 use PearlBee::Tags;
 
-# main page
+# template parameters
+hook before_template => sub {
+    my $tokens = shift;
 
+    $tokens->{'blog_name'} = resultset('Setting')->first->blog_name;
+    $tokens->{'app_url'}   = config->{'app_url'};
+};
+
+# main page
 get '/' => sub {
     forward '/posts';
 };
