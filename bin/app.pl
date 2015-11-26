@@ -7,4 +7,4 @@ chdir("$FindBin::Bin/../");
 
 use PearlBee;
 
-PearlBee->dance;
+PearlBee->to_app;
