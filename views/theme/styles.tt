@@ -20,6 +20,8 @@
 <link href="[% session.app_url %]/blog/css/font-awesome.min.css" rel="stylesheet">
 <!-- Custom CSS -->
 <link href="[% session.app_url %]/blog/css/style.css" rel="stylesheet">
+<link href="[% session.app_url %]/blog/css/header.css" rel="stylesheet">
+<link href="[% session.app_url %]/blog/css/footer.css" rel="stylesheet">
 
 <!-- Favicon -->
 <link rel="shortcut icon" href="#">

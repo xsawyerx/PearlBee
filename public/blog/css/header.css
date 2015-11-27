@@ -1,0 +1,19 @@
+header {
+  width: 980px;
+  padding: 20px 0;
+  margin: 0 auto 20px;
+  border-bottom: solid 1px black;
+}
+
+nav {
+  display: inline-block;
+}
+
+.logo {
+  display: inline-block;
+  margin: 0;
+}
+
+.search {
+  display: inline-block;
+}
