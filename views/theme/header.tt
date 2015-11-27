@@ -13,7 +13,7 @@
                 </div>
             </div>
               
-            [% IF session.multiuser %]
+            [% IF settings.multiuser %]
                 <div class="register_links">
                     [% IF session.user.username %]
                         <div class="col-md-6 pull-right">

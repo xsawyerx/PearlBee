@@ -8,13 +8,13 @@ use PearlBee::Users;
 use PearlBee::Authors;
 use PearlBee::Categories;
 use PearlBee::Tags;
+use Dancer2::Plugin::DBIC;
 
-# template parameters
-hook before_template => sub {
-    my $tokens = shift;
-
-    $tokens->{'blog_name'} = resultset('Setting')->first->blog_name;
-    $tokens->{'app_url'}   = config->{'app_url'};
+hook before => sub {
+    my $settings = resultset('Setting')->first;
+    set multiuser => $settings->multiuser;
+    set blog_name => $settings->blog_name;
+    set app_url   => config->{'app_url'}; # FIXME why oh why?
 };
 
 # main page
