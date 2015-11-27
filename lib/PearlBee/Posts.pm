@@ -7,22 +7,10 @@ use PearlBee::Helpers::Util       qw<map_posts>;
 use PearlBee::Helpers::Pagination qw<get_total_pages get_previous_next_link>;
 use PearlBee::Helpers::Captcha;
 
-sub new_captcha_code {
-    my $code = PearlBee::Helpers::Captcha::generate();
-
-    session secret  => $code;
-
-    # this is a hack because Google Chrome triggers GET 2 times, and it messes up the valid captcha code
-    session secrets => [] unless session('secrets');
-    push @{ session('secrets') }, $code;
-
-    return $code;
-}
-
 sub get_comments {
     my $post = shift;
 
-    new_captcha_code();
+    PearlBee::Helpers::Captcha::new_captcha_code();
 
     # Grab the approved comments for this post and the corresponding reply comments
     my @comments;

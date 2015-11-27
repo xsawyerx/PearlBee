@@ -1,30 +1,40 @@
 package PearlBee::Helpers::Captcha;
-
-use Dancer2;
 use Authen::Captcha;
+use Dancer2 appname => 'PearlBee';
 
-require Exporter;
-our @ISA 	= qw(Exporter);
-our @EXPORT	= qw/generate $captcha/;
-
-our $captcha = Authen::Captcha->new(
-  data_folder => config->{captcha_folder},
-  output_folder => config->{captcha_folder} .'/image',
+my $captcha = Authen::Captcha->new(
+    data_folder   => config->{'captcha_folder'},
+    output_folder => config->{'captcha_folder'} .'/image',
 );
 
-=head
+sub new_captcha_code {
+    my $code = generate_captcha();
 
-Generate a secret code
+    session secret  => $code;
 
-=cut
+    # this is a hack because Google Chrome triggers GET 2 times, and it messes up the valid captcha code
+    session secrets => [] unless session('secrets');
+    push @{ session('secrets') }, $code;
 
-sub generate {
-
-	my $self = shift;
-
-	# Generate a new captcha code
-
-    my $md5sum = $captcha->generate_code(5);
-    
-    return $md5sum;
+    return $code;
 }
+
+sub check_captcha_code {
+    my $code = shift;
+
+    foreach my $secret ( @{ session->{'data'}{'secrets'} || [] } ) {
+        if ( $captcha->check_code( $code, $secret ) == 1 ) {
+            session secrets => [];
+            return 1;
+        }
+    }
+
+    return;
+}
+
+# Generate a new captcha code in MD5
+sub generate_captcha {
+    return $captcha->generate_code(5);
+}
+
+1;
