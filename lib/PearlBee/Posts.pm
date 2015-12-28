@@ -24,6 +24,8 @@ sub get_comments {
             push(@{$comment->{comment_replies}}, $el);
         }
     }
+
+    return @comments;
 }
 
 prefix '/posts' => sub {

@@ -115,15 +115,13 @@ post '/login' => sub {
     my $password = params->{password};
     my $username = params->{username};
 
-    my $user = resultset('User')->search({
+    my $user = resultset('User')->find({
         username => $username,
         -or      => [
             status => 'activated',
             status => 'deactivated'
         ]
-    })->first;
-
-    $user or redirect '/login?failed=1';
+    }) or redirect '/login?failed=1';
 
     my $password_hash = generate_hash($password, $user->salt);
     $user->password eq $password_hash->{hash}
