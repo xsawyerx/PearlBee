@@ -43,10 +43,10 @@ post '/sign-up' => sub {
 
     eval {
         resultset('User')->search({ email => $email })->first
-            or die "Email address already in use.\n";
+            and die "Email address already in use.\n";
 
         resultset('User')->search({ username => $username })->first
-            or die "Username already in use.\n";
+            and die "Username already in use.\n";
 
         # Create the user
 
