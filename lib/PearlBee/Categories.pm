@@ -3,10 +3,6 @@ package PearlBee::Categories;
 use Dancer2 appname => 'PearlBee';
 
 prefix '/categories' => sub {
-    get '/:name' => sub {
-
-    };
-
     post '/new' => sub {
 
     };
@@ -18,6 +14,10 @@ prefix '/categories' => sub {
     post '/delete/:id' => sub {
 
     };
+};
+
+get 'category/:name' => sub {
+
 };
 
 1;

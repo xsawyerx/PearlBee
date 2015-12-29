@@ -6,7 +6,7 @@ get '/authors' => sub {
 
 };
 
-get '/authors/:id' => sub {
+get '/author/:id' => sub {
 
 };
 

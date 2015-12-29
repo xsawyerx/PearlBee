@@ -3,10 +3,6 @@ package PearlBee::Tags;
 use Dancer2 appname => 'PearlBee';
 
 prefix '/tags' => sub {
-    get '/:name' => sub {
-
-    };
-
     post '/new' => sub {
 
     };
@@ -18,6 +14,10 @@ prefix '/tags' => sub {
     post '/delete/:id' => sub {
 
     };
+};
+
+get '/tag/:name' => sub {
+
 };
 
 1;

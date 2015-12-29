@@ -60,24 +60,8 @@ prefix '/posts' => sub {
         };
     };
 
-    get '/:slug' => sub {
-        my $slug       = route_parameters->{'slug'};
-        my $post       = resultset('Post')->find({ slug => $slug });
-        my $settings   = resultset('Setting')->first;
-        my @tags       = resultset('View::PublishedTags')->all();
-        my @categories = resultset('View::PublishedCategories')->search({ name => { '!=' => 'Uncategorized'} });
-        my @recent     = resultset('Post')->search({ status => 'published' },{ order_by => { -desc => "created_date" }, rows => 3 });
-        my @popular    = resultset('View::PopularPosts')->search({}, { rows => 3 });
-
-        template post => {
-            post       => $post,
-            recent     => \@recent,
-            popular    => \@popular,
-            categories => \@categories,
-            comments   => [ get_comments($post) ],
-            setting    => $settings,
-            tags       => \@tags,
-          };
+    get '/new' => needs_permission create_post => sub {
+        1;
     };
 
     get '/new' => needs permission_to => create_post => sub {
@@ -99,6 +83,26 @@ prefix '/posts' => sub {
     post '/delete/:id' => needs permission_to => delete_post => sub {
 
     };
+};
+
+get '/post/:slug' => sub {
+    my $slug       = route_parameters->{'slug'};
+    my $post       = resultset('Post')->find({ slug => $slug });
+    my $settings   = resultset('Setting')->first;
+    my @tags       = resultset('View::PublishedTags')->all();
+    my @categories = resultset('View::PublishedCategories')->search({ name => { '!=' => 'Uncategorized'} });
+    my @recent     = resultset('Post')->search({ status => 'published' },{ order_by => { -desc => "created_date" }, rows => 3 });
+    my @popular    = resultset('View::PopularPosts')->search({}, { rows => 3 });
+
+    template post => {
+        post       => $post,
+        recent     => \@recent,
+        popular    => \@popular,
+        categories => \@categories,
+        comments   => [ get_comments($post) ],
+        setting    => $settings,
+        tags       => \@tags,
+      };
 };
 
 1;
