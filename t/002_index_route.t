@@ -1,9 +1,5 @@
-use strict;
-use warnings;
-use PearlBee::Test;
+use PearlBee::Test; # imports strict, warnings, etc
 
-my $mech = mech;
-
-$mech->get_ok('/', 'response status is 200 for /');
+mech->get_ok('/', 'response status is 200 for /');
 
 done_testing;
