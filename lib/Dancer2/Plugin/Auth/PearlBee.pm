@@ -18,6 +18,8 @@ register needs_permission => sub {
         $rbac->can_role( $user->role, $permission )
             or $dsl->app->redirect('/login');
 
+        var user => $user;
+
         goto &$sub;
     }
 };
@@ -33,6 +35,8 @@ register needs_role => sub {
 
         $user->role eq $role
             or $dsl->app->redirect('/login');
+
+        var user => $user;
 
         goto &$sub;
     };
