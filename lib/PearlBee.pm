@@ -10,6 +10,7 @@ use PearlBee::Users;
 use PearlBee::Authors;
 use PearlBee::Categories;
 use PearlBee::Tags;
+use PearlBee::Dashboard;
 
 use RBAC::Tiny;
 

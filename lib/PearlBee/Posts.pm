@@ -2,7 +2,6 @@ package PearlBee::Posts;
 # ABSTRCT: Posts-related paths
 use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
-use Dancer2::Plugin::Auth::PearlBee;
 
 use PearlBee::Helpers::Util       qw<map_posts>;
 use PearlBee::Helpers::Pagination qw<get_total_pages get_previous_next_link>;
@@ -60,45 +59,25 @@ prefix '/posts' => sub {
         };
     };
 
-    get '/new' => needs_permission create_post => sub {
-        1;
+    get '/:slug' => sub {
+        my $slug       = route_parameters->{'slug'};
+        my $post       = resultset('Post')->find({ slug => $slug });
+        my $settings   = resultset('Setting')->first;
+        my @tags       = resultset('View::PublishedTags')->all();
+        my @categories = resultset('View::PublishedCategories')->search({ name => { '!=' => 'Uncategorized'} });
+        my @recent     = resultset('Post')->search({ status => 'published' },{ order_by => { -desc => "created_date" }, rows => 3 });
+        my @popular    = resultset('View::PopularPosts')->search({}, { rows => 3 });
+
+        template post => {
+            post       => $post,
+            recent     => \@recent,
+            popular    => \@popular,
+            categories => \@categories,
+            comments   => [ get_comments($post) ],
+            setting    => $settings,
+            tags       => \@tags,
+          };
     };
-
-    post '/new' => needs_permission create_post => sub {
-
-    };
-
-    get '/edit/:id' => needs_permission update_post => sub {
-
-    };
-
-    post '/update/:id' => needs_permission update_post => sub {
-
-    };
-
-    post '/delete/:id' => needs_permission delete_post => sub {
-
-    };
-};
-
-get '/post/:slug' => sub {
-    my $slug       = route_parameters->{'slug'};
-    my $post       = resultset('Post')->find({ slug => $slug });
-    my $settings   = resultset('Setting')->first;
-    my @tags       = resultset('View::PublishedTags')->all();
-    my @categories = resultset('View::PublishedCategories')->search({ name => { '!=' => 'Uncategorized'} });
-    my @recent     = resultset('Post')->search({ status => 'published' },{ order_by => { -desc => "created_date" }, rows => 3 });
-    my @popular    = resultset('View::PopularPosts')->search({}, { rows => 3 });
-
-    template post => {
-        post       => $post,
-        recent     => \@recent,
-        popular    => \@popular,
-        categories => \@categories,
-        comments   => [ get_comments($post) ],
-        setting    => $settings,
-        tags       => \@tags,
-      };
 };
 
 1;
