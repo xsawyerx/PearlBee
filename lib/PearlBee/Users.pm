@@ -140,24 +140,6 @@ get '/profile' => sub {
 
 };
 
-prefix '/dashboard' => sub {
-    get '' => needs login => sub {
-
-    };
-
-    get '/posts' => sub {
-
-    };
-
-    get '/users' => sub {
-
-    };
-
-    get '/settings' => sub {
-
-    };
-};
-
 prefix '/users' => sub {
     get '/edit/:id' => sub {
 
