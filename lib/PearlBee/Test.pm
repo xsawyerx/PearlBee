@@ -1,7 +1,6 @@
 package PearlBee::Test;
-use warnings;
 use strict;
-use utf8;
+use warnings;
 use Test::More ();
 use PearlBee;
 use PearlBee::Model::Schema;
