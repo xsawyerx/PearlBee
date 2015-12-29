@@ -1,6 +1,6 @@
 requires 'DBIx::Class';
 requires 'Dancer2' => 0.163000;
-requires 'Dancer2::Plugin::Auth::Tiny';
+requires 'RBAC::Tiny' => 0.003;
 requires 'Dancer2::Plugin::DBIC';
 requires 'Dancer2::Plugin::REST';
 requires 'DateTime';

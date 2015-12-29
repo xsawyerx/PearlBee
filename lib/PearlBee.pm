@@ -2,7 +2,7 @@ package PearlBee;
 # ABSTRACT: PearlBee Blog platform
 use Dancer2 0.163000;
 use Dancer2::Plugin::DBIC;
-use Dancer2::Plugin::Auth::Tiny;
+use Dancer2::Plugin::Auth::PearlBee;
 
 # load all components
 use PearlBee::Posts;
