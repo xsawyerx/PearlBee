@@ -107,7 +107,7 @@ post '/sign-up' => sub {
 
 get '/login' => sub {
     # if registered, just display the dashboard
-    session('user') or redirect '/dashboard';
+    session('user_id') and redirect '/dashboard';
     template login => {}, { layout => 'admin' };
 };
 
