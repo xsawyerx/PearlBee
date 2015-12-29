@@ -64,23 +64,19 @@ prefix '/posts' => sub {
         1;
     };
 
-    get '/new' => needs permission_to => create_post => sub {
+    post '/new' => needs_permission create_post => sub {
 
     };
 
-    post '/new' => needs permission_to => create_post => sub {
+    get '/edit/:id' => needs_permission update_post => sub {
 
     };
 
-    get '/edit/:id' => needs permission_to => update_post => sub {
+    post '/update/:id' => needs_permission update_post => sub {
 
     };
 
-    post '/update/:id' => needs permission_to => update_post => sub {
-
-    };
-
-    post '/delete/:id' => needs permission_to => delete_post => sub {
+    post '/delete/:id' => needs_permission delete_post => sub {
 
     };
 };
