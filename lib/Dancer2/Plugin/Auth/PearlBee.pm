@@ -12,10 +12,8 @@ register needs_permission => sub {
         my $user_id = $dsl->app->session->read('user_id')
             or $dsl->app->redirect('/login');
 
-        my $user = resultset('User')->find({
-            id     => $user_id,
-            status => 'activated',
-        }) or $dsl->app->redirect('/login');
+        my $user = resultset('User')->from_session($user_id)
+            or $dsl->app->redirect('/login');
 
         $rbac->can_role( $user->role, $permission )
             or $dsl->app->redirect('/login');
@@ -30,10 +28,8 @@ register needs_role => sub {
         my $user_id = $dsl->app->session('user_id')
             or $dsl->app->redirect('/login');
 
-        my $user = resultset('User')->find({
-            id     => $user_id,
-            status => 'activated',
-        }) or $dsl->app->redirect('/login');
+        my $user = resultset('User')->from_session($user_id)
+            or $dsl->app->redirect('/login');
 
         $user->role eq $role
             or $dsl->app->redirect('/login');
