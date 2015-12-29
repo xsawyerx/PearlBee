@@ -11,7 +11,7 @@ use HTTP::Cookies;
 use PearlBee;
 use PearlBee::Model::Schema;
 
-our @EXPORT = ('app', 'mech', 'db');
+our @EXPORT = ('app', 'mech', 'schema');
 
 sub import {
     my ($caller) = @_;
@@ -28,7 +28,7 @@ sub mech {
 
 sub app { PearlBee::app() }
 
-sub db {
+sub schema {
     my $config = PearlBee::config->{plugins}{DBIC}{default};
     return PearlBee::Model::Schema->connect(
         $config->{dsn},
