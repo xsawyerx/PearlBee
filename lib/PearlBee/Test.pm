@@ -7,6 +7,7 @@ use PearlBee;
 use PearlBee::Model::Schema;
 use Import::Into;
 use Test::WWW::Mechanize::PSGI;
+use HTTP::Cookies;
 use parent 'Exporter';
 
 our @EXPORT = ('app', 'mech', 'db');
@@ -19,7 +20,9 @@ sub import {
 }
 
 sub mech {
-    Test::WWW::Mechanize::PSGI->new( app => PearlBee->to_app );
+    my $mech = Test::WWW::Mechanize::PSGI->new( app => PearlBee->to_app );
+    $mech->cookie_jar(HTTP::Cookies->new);
+    return $mech;
 }
 
 sub app { PearlBee::app() }
