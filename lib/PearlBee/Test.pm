@@ -1,13 +1,15 @@
 package PearlBee::Test;
 use strict;
 use warnings;
-use Test::More ();
-use PearlBee;
-use PearlBee::Model::Schema;
+use parent 'Exporter';
 use Import::Into;
+
+use Test::More ();
 use Test::WWW::Mechanize::PSGI;
 use HTTP::Cookies;
-use parent 'Exporter';
+
+use PearlBee;
+use PearlBee::Model::Schema;
 
 our @EXPORT = ('app', 'mech', 'db');
 
