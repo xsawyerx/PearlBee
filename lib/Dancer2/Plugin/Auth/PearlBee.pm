@@ -1,4 +1,4 @@
-package Dancer2::Plugin::Auth::Tiny::PearlBee;
+package Dancer2::Plugin::Auth::PearlBee;
 
 use strict;
 use warnings;
