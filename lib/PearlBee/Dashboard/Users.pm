@@ -12,8 +12,8 @@ use PearlBee::Helpers::Pagination qw<
 use PearlBee::Helpers::Util qw<create_password>;
 
 use DateTime;
+use URI::Escape;
 use Email::Template;
-#use URI::Escape;
 
 sub change_user_state {
     my ( $id, $state ) = @_;
@@ -31,7 +31,7 @@ sub change_user_state {
         error $error;
     };
 
-    return session('app_url') . '/dashboard/users';
+    return config->{'app_url'} . '/dashboard/users';
 }
 
 prefix '/dashboard/posts' => sub {
@@ -107,75 +107,6 @@ prefix '/dashboard/posts' => sub {
         } => { layout => 'admin' };
     };
 
-    get '/new' => needs_permission create_post => sub {
-        template 'admin/posts/add' => {
-            categories => [ resultset('Category')->all() ],
-        } => { layout => 'admin' };
-    };
-
-    post '/new' => needs_permission create_post => sub {
-        my @categories = resultset('Category')->all();
-        my $post;
-
-        eval {
-            # Set the proper timezone
-            my $dt       = DateTime->now;
-            my $settings = resultset('Setting')->first;
-            $dt->set_time_zone( $settings->timezone );
-
-            my $parameters        = body_parameters;
-            my $user              = var('user');
-            my ($slug, $changed)  = resultset('Post')->check_slug( $parameters->{'slug'} );
-            session warning => 'The slug was already taken but we generated a similar slug for you! Feel free to change it as you wish.' if ($changed);
-
-            # Upload the cover image first so we'll have the generated filename ( if exists )
-            my $cover_filename;
-            if ( upload('cover') ) {
-                my $cover        = upload('cover');
-                $cover_filename  = generate_crypted_filename();
-                my ($ext)        = $cover->filename =~ /(\.[^.]+)$/;  #extract the extension
-                $ext             = lc($ext);
-                $cover_filename .= $ext;
-
-                $cover->copy_to( config->{'covers_folder'} . $cover_filename );
-            }
-
-            # Next we can store the post into the database safely
-            my $dtf = schema->storage->datetime_parser;
-            my $params = {
-                title        => $parameters->{'title'},
-                slug         => $slug,
-                content      => $parameters->{'post'},
-                user_id      => $user->id,
-                status       => $parameters->{'status'},
-                cover        => ( $cover_filename ) ? $cover_filename : '',
-                created_date => $dtf->format_datetime($dt),
-            };
-
-            # XXX: this *does* create, not just *try* to create
-            $post = resultset('Post')->can_create($params);
-
-            # Insert the categories selected with the new post
-            resultset('PostCategory')->connect_categories( $parameters->{'category'}, $post->id );
-
-            # Connect and update the tags table
-            resultset('PostTag')->connect_tags( $parameters->{'tags'}, $post->id );
-
-            1;
-        } or do {
-            my $error = $@ || 'Zombie error';
-            error $error;
-            # FIXME: report error too (Deferred?)
-            redirect session('app_url') . '/dashboard/posts/new';
-        };
-
-        # If the post was added successfully, store a success message to show on the view
-        session success => 'The post was added successfully';
-
-        # If the user created a new post redirect him to the post created
-        redirect session('app_url') . '/dashboard/posts/edit/' . $post->slug;
-    };
-
     foreach my $state (qw<activate deactivate suspend>) {
         get "/$state/:id" => sub {
             my $new_url = change_user_state(
@@ -187,100 +118,108 @@ prefix '/dashboard/posts' => sub {
         };
     }
 
-    # FIXME: edit using the ID, not the slug (required editing edit links in the template)
-    get '/edit/:slug' => needs_permission update_post => sub {
-        my $post_slug       = route_parameters->{'slug'};
-        my $post            = resultset('Post')->find({ slug => $post_slug });
-        my @post_categories = $post->post_categories;
-        my @post_tags       = $post->post_tags;
-        my @all_categories  = resultset('Category')->all;
-        my @all_tags        = resultset('Tag')->all;
-
-        # Prepare tags for the UI
-        my $joined_tags = join ', ', map $_->tag->name, @post_tags;
-
-        # Prepare the categories
-        my @categories = map $_->category, @post_categories;
-
-        # Array of post categories id for populating the checkboxes
-        my @categories_ids = map $_->id, @categories;
-
-        my $params = {
-            post           => $post,
-            tags           => $joined_tags,
-            categories     => \@categories,
-            all_categories => \@all_categories,
-            ids            => \@categories_ids,
-            all_tags       => \@all_tags
-          };
-
-        # Check if there are any messages to show
-        # Delete them after stored on the stash
-        if ( session('warning') ) {
-          $params->{'warning'} = session('warning');
-          session warning => undef
-        }
-        elsif ( session('success') ) {
-          $params->{'success'} = session('success');
-          session success => undef;
-        }
-
-        template 'dashboard/posts/edit' => $params => { layout => 'admin' };
-    };
-
-    post '/update/:id' => needs_permission update_post => sub {
-        my $params  = body_parameters;
-        my $post_id = route_parameters->{'id'};
-        my $post    = resultset('Post')->find({ id => $post_id });
-        my $title   = $params->{'title'};
-        my $content = $params->{'post'};
-        my $tags    = $params->{'tags'};
-
-        my ($slug, $changed)  = resultset('Post')->check_slug( $params->{'slug'}, $post->id );
-        session warning => 'The slug was already taken but we generated a similar slug for you! Feel free to change it as you wish.' if ($changed);
+    # approve pending users (FIXME: rename to "approve"?)
+    get '/allow/:id' => needs_permission allow_user => sub {
+        my $user_id = route_parameters->{'id'};
+        my $user    = resultset('User')->find( $user_id )
+            or redirect config->{'app_url'} . '/dashboard/users';
 
         eval {
-            # Upload the cover image
-            my $cover;
-            my $ext;
-            my $crypted_filename;
+            my ($password, $pass_hash, $salt) = create_password();
+            $user->update({ password => $pass_hash, salt => $salt });
+            $user->allow();
 
-            if ( upload('cover') ) {
-
-                # If the user uploaded a cover image, generate a crypted name for uploading
-                $crypted_filename = generate_crypted_filename();
-                $cover = upload('cover');
-                ($ext) = $cover->filename =~ /(\.[^.]+)$/;            #extract the extension
-                $ext = lc($ext);
-                $cover->copy_to( config->{covers_folder} . $crypted_filename . $ext );
-            }
-
-            my $status = params->{status};
-            $post->update(
+            Email::Template->send(
+                config->{'email_templates'} . 'welcome.tt',
                 {
-                    title   => $title,
-                    slug    => $slug,
-                    cover   => ($crypted_filename) ? $crypted_filename . $ext : $post->cover,
-                    status  => $status,
-                    content => $content,
+                    From    => config->{'default_email_sender'},
+                    To      => $user->email,
+                    Subject => config->{'welcome_email_subject'},
+
+                    tt_vars => {
+                        role        => $user->role,
+                        username    => $user->username,
+                        password    => $password,
+                        first_name  => $user->first_name,
+                        app_url     => config->{'app_url'},
+                        blog_name   => config->{'blog_name'},
+                        signature   => config->{'email_signature'},
+                        allowed     => 1,
+                    },
                 }
-            );
-
-            # Reconnect the categories with the new one and delete the old ones
-            resultset('PostCategory')->connect_categories( params->{category}, $post->id );
-
-            # Reconnect and update the selected tags
-            resultset('PostTag')->connect_tags( params->{tags}, $post->id );
-
-            session success => 'The post was updated successfully!';
-
+            ) or error 'Could not send the email'; # FIXME GH#9
             1;
         } or do {
+            # FIXME: ugh GH#9
             my $error = $@ || 'Zombie error';
             error $error;
         };
 
-        redirect session('app_url') . '/dashboard/posts/edit/' . $post->slug;
+        redirect config->{'app_url'} . '/admin/users';
+    };
+
+
+    get '/add' => sub {
+        template 'dashboard/users/add', {},  { layout => 'admin' };
+    };
+
+    post '/add' => sub {
+        eval {
+            # Set the proper timezone
+            my $dt       = DateTime->now;
+            my $settings = resultset('Setting')->first;
+            $dt->set_time_zone( $settings->timezone );
+
+            my ($password, $pass_hash, $salt) = create_password();
+            my $params     = body_parameters;
+            my $username   = $params->{'username'};
+            my $email      = $params->{'email'};
+            my $first_name = $params->{'first_name'};
+            my $last_name  = $params->{'last_name'};
+            my $role       = $params->{'role'};
+
+            resultset('User')->create({
+                username        => $username,
+                password        => $pass_hash,
+                salt            => $salt,
+                first_name      => $first_name,
+                last_name       => $last_name,
+                register_date   => join (' ', $dt->ymd, $dt->hms),
+                role            => $role,
+                email           => $email,
+            });
+
+            Email::Template->send(
+                config->{'email_templates'} . 'welcome.tt',
+                {
+                    From    => config->{'default_email_sender'},
+                    To      => $email,
+                    Subject => config->{'welcome_email_subject'},
+
+                    tt_vars => {
+                        role        => $role,
+                        username    => $username,
+                        password    => $password,
+                        first_name  => $first_name,
+                        app_url     => config->{'app_url'},
+                        blog_name   => config->{'blog_name'},
+                        signature   => config->{'email_signature'},
+                    },
+                }
+            ) or error "Could not send the email";
+
+            1;
+        } or do {
+            my $error = $@ || 'Zombie error';
+            error $error; # FIXME GH#9
+            return template 'dashboard/users/add' => {
+                warning => 'Something went wrong. Please contact the administrator.'
+            } => { layout => 'admin' };
+        };
+
+        template 'dashboard/users/add' => {
+            success => 'The user was added succesfully and will be activated after he logs in.'
+        } => { layout => 'admin' };
     };
 };
 
