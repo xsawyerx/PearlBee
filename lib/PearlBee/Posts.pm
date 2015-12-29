@@ -2,6 +2,7 @@ package PearlBee::Posts;
 # ABSTRCT: Posts-related paths
 use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Auth::Tiny::PearlBee;
 
 use PearlBee::Helpers::Util       qw<map_posts>;
 use PearlBee::Helpers::Pagination qw<get_total_pages get_previous_next_link>;
