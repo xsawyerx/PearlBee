@@ -69,6 +69,7 @@ permissions:
           - author
         can:
           - global_settings
+          - view_user
           - create_user
           - update_user
           - delete_user
