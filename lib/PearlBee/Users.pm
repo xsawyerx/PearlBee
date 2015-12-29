@@ -2,6 +2,7 @@ package PearlBee::Users;
 # ABSTRACT: User-related paths
 use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
+use PearlBee::Password 'generate_hash';
 use PearlBee::Helpers::Captcha;
 use PearlBee::Helpers::Util 'create_password';
 
