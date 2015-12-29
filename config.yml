@@ -51,6 +51,7 @@ plugins:
 permissions:
     author:
         can:
+          - view_post
           - create_post
           - publish_post
           - update_post
