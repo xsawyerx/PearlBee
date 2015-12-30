@@ -3,20 +3,24 @@ package Dancer2::Plugin::Auth::PearlBee;
 use strict;
 use warnings;
 use Dancer2::Plugin;
+use URI::Escape;
 
 register needs_permission => sub {
     my ( $dsl, $permission, $sub ) = plugin_args(@_);
     my $rbac = $dsl->config->{'rbac'};
+    my $from_session_cb = $dsl->config->{'rbac_from_session'};
+    my $error_message = uri_escape( $rbac->{'error_message'} )
+                     || 'You do not have permission to access the page';
 
     return sub {
         my $user_id = $dsl->app->session->read('user_id')
-            or $dsl->app->redirect('/login');
+            or $dsl->app->redirect('/login?failure="Please login first"');
 
-        my $user = resultset('User')->from_session($user_id)
-            or $dsl->app->redirect('/login');
+        my $user = $from_session_cb->($user_id)
+            or $dsl->app->redirect('/login?failure="Unauthorized user"');
 
         $rbac->can_role( $user->role, $permission )
-            or $dsl->app->redirect('/login');
+            or $dsl->app->redirect("/login?failure=\"$error_message\"");
 
         var user => $user;
 

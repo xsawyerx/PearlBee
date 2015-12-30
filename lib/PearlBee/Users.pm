@@ -107,6 +107,11 @@ post '/sign-up' => sub {
 
 get '/login' => sub {
     # if registered, just display the dashboard
+    my $failure = query_parameters->{'failure'};
+    $failure and return template login => {
+        warning => $failure,
+    }, { layout => 'admin' };
+
     session('user_id') and redirect '/dashboard';
     template login => {}, { layout => 'admin' };
 };
