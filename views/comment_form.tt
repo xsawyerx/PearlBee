@@ -3,13 +3,13 @@
         <h5>Comment</h5>
     </div>
     
-    <form [% (!session.user.id ? 'class="comment_form"' : '') %] role="form" action="[% session.app_url %]/comment/add" method="post">
+    <form [% (!vars.user.id ? 'class="comment_form"' : '') %] role="form" action="[% session.app_url %]/comment/add" method="post">
         
-        [% IF session.user.username %]
+        [% IF vars.user.username %]
             
             <div class="form-group">
-                Comment as <b><i class="icon-user"></i> <a href="/posts/user/[% session.user.username %]">[% session.user.username %]</a></b>
-                <input type="hidden" name="comment_as" email" value="[% session.user.id %]" />
+                Comment as <b><i class="icon-user"></i> <a href="/posts/user/[% vars.user.username %]">[% vars.user.username %]</a></b>
+                <input type="hidden" name="comment_as" email" value="[% vars.user.id %]" />
             </div>
         
         [% ELSE %]

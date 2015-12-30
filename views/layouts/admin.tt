@@ -2,7 +2,7 @@
 <html>
    <head>
       <!-- Title here -->
-      <title>[% session.blog_name %] [% session.user.role FILTER ucfirst %]</title>
+      <title>[% session.blog_name %] [% vars.user.role FILTER ucfirst %]</title>
 
       <!-- Description, Keywords and Author -->
       <meta name="description" content="Your description">
@@ -53,7 +53,7 @@
    <body>
 
       
-    [% IF session.user %]  
+    [% IF session.user_id %]  
 
       <!-- Logo & Navigation starts -->      
       
@@ -69,7 +69,7 @@
                <div class="col-md-12">
                   <!-- Logo -->
                   <div class="logo text-center">
-                     <h1><a href="[% session.app_url %]">[% session.blog_name %] [% session.user.role FILTER ucfirst %]</a></h1>
+                     <h1><a href="[% session.app_url %]">[% session.blog_name %] [% vars.user.role FILTER ucfirst %]</a></h1>
                   </div>
                </div>
             </div>
@@ -85,7 +85,7 @@
       <div class="page-content blocky">
          <div class="container">
 
-            [% IF session.user %]
+            [% IF session.user_id %]
                 [% INCLUDE layouts/admin_menu.tt %]
             [% END %]
             

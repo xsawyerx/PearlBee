@@ -19,7 +19,7 @@
            </div>
            <div class="awidget-body">
               
-              [% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+              [% SET role = ( vars.user.is_admin ) ? "admin" : "author" %]
               <a href="/[% role %]/posts"> All </a>([% all %]) | 
               <a href="/[% role %]/posts/published/page/1"> Published </a>([% publish %]) | 
               <a href="/[% role %]/posts/draft/page/1"> Draft </a>([% draft %]) | 
