@@ -63,7 +63,7 @@ get '/dashboard/settings/import' => needs_permission import => sub {
     template 'admin/settings/import' => {} => { layout => 'admin' };
 };
 
-post '/dashboard/settings/wp_import' => needs_importing import => sub {
+post '/dashboard/settings/wp_import' => needs_permission import => sub {
     my $import = upload('source')
         or return template 'admin/settings/import' => {
             error => 'No file chosen for import',
