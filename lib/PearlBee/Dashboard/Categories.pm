@@ -9,7 +9,7 @@ prefix '/dashboard/categories' => sub {
             name => { '!=' => 'Uncategorized'}
         });
 
-        template '/dashboard/categories/list' => {
+        template '/admin/categories/list' => {
             categories => \@categories,
         } => { layout => 'admin' };
     };
@@ -27,7 +27,7 @@ prefix '/dashboard/categories' => sub {
         #        this should actually redirect to /dashboard/categories
         #        with the warning
         $found_slug_or_name
-            and return template '/dashboard/categories/list' => {
+            and return template '/admin/categories/list' => {
                 categories => [
                     resultset('Category')->search({
                         name => { '!=' => 'Uncategorized' }
@@ -53,7 +53,7 @@ prefix '/dashboard/categories' => sub {
         };
 
         # FIXME: proper notification as above :)
-        template '/dashboard/categories/list' => {
+        template '/admin/categories/list' => {
             success    => 'The cateogry was successfully added.',
             categories => [
                 resultset('Category')->search({
@@ -75,7 +75,7 @@ prefix '/dashboard/categories' => sub {
             # FIXME: GH#9
             my $error = $@ || 'Zombie error';
             error $error;
-            return template '/dashboard/categories/list' => {
+            return template '/admin/categories/list' => {
                 warning    => 'Something went wrong.',
                 categories => [
                     resultset('Category')->search({
@@ -91,7 +91,7 @@ prefix '/dashboard/categories' => sub {
     get '/edit/:id' => needs_permission edit_category => sub {
         my $category_id = route_parameters->{'id'};
 
-        template '/dashboard/categories/list' => {
+        template '/admin/categories/list' => {
             category   => resultset('Category')->find($category_id),
             categories => [
                 resultset('Category')->search({
@@ -109,12 +109,12 @@ prefix '/dashboard/categories' => sub {
         my $params     = {};
         my $slug       = string_to_slug( body_parameters->{'slug'} );
         my $found_slug = resultset('Category')->search({
-            id => { '!=' => $category->id },
+            id   => { '!=' => $category_id },
             slug => $slug,
         })->first and $params->{'warning'} = 'The category slug already exists';
 
         my $found_name = resultset('Category')->search({
-            id => { '!=' => $category->id },
+            id   => { '!=' => $category_id },
             name => $name,
         })->first and $params->{'warning'} = 'The category name already exists';
 
