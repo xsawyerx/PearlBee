@@ -4,7 +4,6 @@
         <ul class="nav">
             <!-- Main menu -->
 
-            [% SET role = ( vars.user.is_admin ) ? "admin" : "author" %]
             <li class="has_submenu">
                  <a href="#">
                     <i class="icon-file"></i> Posts
@@ -12,12 +11,12 @@
                  </a>
                  <!-- Sub menu -->
                  <ul>
-                    <li><a href="[% session.app_url %]/[% role %]/posts">All</a></li>
-                    <li><a href="[% session.app_url %]/[% role %]/posts/add">Create post</a></li>
+                    <li><a href="[% session.app_url %]/dashboard/posts">All</a></li>
+                    <li><a href="[% session.app_url %]/dashboard/posts/add">Create post</a></li>
                 </ul>
             </li>
 
-            <li><a href="[% session.app_url %]/[% role %]/comments"><i class="icon-comment"></i> Comments</a></li>
+            <li><a href="[% session.app_url %]/dashboard/comments"><i class="icon-comment"></i> Comments</a></li>
 
             [% IF (vars.user.is_admin) %]
 

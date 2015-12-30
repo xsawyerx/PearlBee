@@ -19,11 +19,10 @@
            </div>
            <div class="awidget-body">
               
-              [% SET role = ( vars.user.is_admin ) ? "admin" : "author" %]
-              <a href="/[% role %]/posts"> All </a>([% all %]) | 
-              <a href="/[% role %]/posts/published/page/1"> Published </a>([% publish %]) | 
-              <a href="/[% role %]/posts/draft/page/1"> Draft </a>([% draft %]) | 
-              <a href="/[% role %]/posts/trash/page/1"> Trash </a>([% trash %])
+              <a href="/dashboard/posts"> All </a>([% all %]) | 
+              <a href="/dashboard/posts/published/page/1"> Published </a>([% publish %]) | 
+              <a href="/dashboard/posts/draft/page/1"> Draft </a>([% draft %]) | 
+              <a href="/dashboard/posts/trash/page/1"> Trash </a>([% trash %])
 
               <table class="table table-hover table-bordered ">
                <thead>
@@ -57,7 +56,7 @@
                       [% IF (post.status == 'published') %]
                         <span class="label label-success"> Published </span>
                       [% ELSE %]
-                        <a href="/[% role %]/posts/publish/[% post.id %]"> Publish </a>
+                        <a href="/dashboard/posts/publish/[% post.id %]"> Publish </a>
                       [% END %]
 
                       |
@@ -65,7 +64,7 @@
                       [% IF (post.status == 'draft') %]
                         <span class="label label-warning"> Draft </span>
                       [% ELSE %]
-                        <a href="/[% role %]/posts/draft/[% post.id %]"> Draft </a>
+                        <a href="/dashboard/posts/draft/[% post.id %]"> Draft </a>
                       [% END %]
 
                       |
@@ -73,7 +72,7 @@
                       [% IF (post.status == 'trash') %]
                         <span class="label label-danger"> Trash </span>
                       [% ELSE %]
-                        <a href="/[% role %]/posts/trash/[% post.id %]"> Trash </a>
+                        <a href="/dashboard/posts/trash/[% post.id %]"> Trash </a>
                       [% END %]
                     </td>
 
@@ -95,7 +94,7 @@
                     
                     <td width="10%">
                        <a href="/post/[% post.slug %]"> <button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button> </a>
-                       <a href="/[% role %]/posts/edit/[% post.slug %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
+                       <a href="/dashboard/posts/edit/[% post.slug %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
                    </td>
                   </tr>
 
