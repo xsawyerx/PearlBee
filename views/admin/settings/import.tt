@@ -15,14 +15,14 @@
             </div>
             <div class="awidget-body">
                 [% INCLUDE components/alerts.tt %]
-                <form class="form-horizontal" method="post" enctype="multipart/form-data" action="[% session.app_url %]/admin/settings/wp_import">
+                <form class="form-horizontal" method="post" enctype="multipart/form-data" action="[% session.app_url %]/dashboard/settings/wp_import">
                     <div class="form-group">
                         <input class="form-control" id="source" name="source" type="file" placeholder="Cover image"/>
                     </div>
                     <div class="form-group">
                         <div>
                             <button type="submit" class="btn btn-default">Import</button>
-                            <a href="/admin/settings/import"><button type="button" class="btn btn-danger">Cancel</button></a>
+                            <a href="/dashboard/settings/import"><button type="button" class="btn btn-danger">Cancel</button></a>
                         </div>
                     </div>
                 </form>

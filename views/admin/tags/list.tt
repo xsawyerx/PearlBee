@@ -16,7 +16,7 @@
 		                  
 		        	[% INCLUDE components/alerts.tt %]
 
-					<form method="post" action="[% session.app_url %]/admin/tags/edit/[% tag.id %]">
+					<form method="post" action="[% session.app_url %]/dashboard/tags/edit/[% tag.id %]">
 
 			        	<div class="form-group">
 	                      <label class="col-lg-2 control-label">Name</label>
@@ -38,7 +38,7 @@
 	                      <div class="col-lg-offset-2 col-lg-10">
 	                        <hr />
 	                        <button type="submit" class="btn btn-default">Update</button>
-	                        <a href="/admin/tags"> <button type="button" class="btn btn-danger">Cancel</button> </a>
+	                        <a href="/dashboard/tags"> <button type="button" class="btn btn-danger">Cancel</button> </a>
 	                      </div>
 	                    </div>
 
@@ -60,7 +60,7 @@
 		                  
 		        	[% INCLUDE components/alerts.tt %]
 
-					<form method="post" action="[% session.app_url %]/admin/tags/add">
+					<form method="post" action="[% session.app_url %]/dashboard/tags/add">
 
 			        	<div class="form-group">
 	                      <label class="col-lg-2 control-label">Name</label>
@@ -82,7 +82,7 @@
 	                      <div class="col-lg-offset-2 col-lg-10">
 	                        <hr />
 	                        <button type="submit" class="btn btn-default">Add</button>
-	                        <a href="/admin/tags"> <button type="button" class="btn btn-danger">Cancel</button> </a>
+	                        <a href="/dashboard/tags"> <button type="button" class="btn btn-danger">Cancel</button> </a>
 	                      </div>
 	                    </div>
 
@@ -119,8 +119,8 @@
 								<td> [% tag.name %] 		  </td>	
 								<td> [% tag.slug %] 		  </td>						
 								<td style="width: 5%"> 
-									<a href="/admin/tags/edit/[% tag.id %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
-									<a href="/admin/tags/delete/[% tag.id %]"> <button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button> </a>
+									<a href="/dashboard/tags/edit/[% tag.id %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
+									<a href="/dashboard/tags/delete/[% tag.id %]"> <button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button> </a>
 								</td>
 							</tr>
 						

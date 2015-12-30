@@ -16,7 +16,7 @@
 		                  
 		        	[% INCLUDE components/alerts.tt %]
 
-					<form method="post" action="[% session.app_url %]/admin/categories/edit/[% category.id %]">
+					<form method="post" action="[% session.app_url %]/dashboard/categories/edit/[% category.id %]">
 
 			        	<div class="form-group">
 	                      <label class="col-lg-2 control-label">Name</label>
@@ -38,7 +38,7 @@
 	                      <div class="col-lg-offset-2 col-lg-10">
 	                        <hr />
 	                        <button type="submit" class="btn btn-default">Update</button>
-	                        <a href="/admin/categories"> <button type="button" class="btn btn-danger">Cancel</button> </a>
+	                        <a href="/dashboard/categories"> <button type="button" class="btn btn-danger">Cancel</button> </a>
 	                      </div>
 	                    </div>
 
@@ -60,7 +60,7 @@
 		                  
 		        	[% INCLUDE components/alerts.tt %]
 
-					<form method="post" action="[% session.app_url %]/admin/categories/add">
+					<form method="post" action="[% session.app_url %]/dashboard/categories/add">
 
 			        	<div class="form-group">
 	                      <label class="col-lg-2 control-label">Name</label>
@@ -82,7 +82,7 @@
 	                      <div class="col-lg-offset-2 col-lg-10">
 	                        <hr />
 	                        <button type="submit" class="btn btn-default">Add</button>
-	                        <a href="/admin/categories"> <button type="button" class="btn btn-danger">Cancel</button> </a>
+	                        <a href="/dashboard/categories"> <button type="button" class="btn btn-danger">Cancel</button> </a>
 	                      </div>
 	                    </div>
 
@@ -121,8 +121,8 @@
 								<td> [% category.slug %] 		  </td>	
 								<td> [% category.user.username %] </td>						
 								<td style="width: 5%"> 
-									<a href="/admin/categories/edit/[% category.id %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
-									<a href="/admin/categories/delete/[% category.id %]"> <button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button> </a>
+									<a href="/dashboard/categories/edit/[% category.id %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
+									<a href="/dashboard/categories/delete/[% category.id %]"> <button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button> </a>
 								</td>
 							</tr>
 						

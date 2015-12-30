@@ -21,7 +21,7 @@
                                 <nav class="collapse navbar-collapse bs-navbar-collapse navbar-right" role="navigation">
                                   <ul class="nav navbar-nav">
                                     <li>
-                                        <a href="[% session.app_url %]/admin"> Welcome <b>[% session.user.username %]</b> !</a>
+                                        <a href="[% session.app_url %]/dashboard"> Welcome <b>[% session.user.username %]</b> !</a>
                                     </li>
                                     <li class="dropdown my_account"> 
                                       <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account <b class="caret"></b></a>
@@ -44,7 +44,7 @@
                                         <a href="[% session.app_url %]/sign-up"> Sign Up</a>
                                     </li>
                                     <li>
-                                        <a href="[% session.app_url %]/admin"> Login</a>
+                                        <a href="[% session.app_url %]/dashboard"> Login</a>
                                     </li>
                         [% END %]
                                 </ul>
@@ -58,7 +58,7 @@
                         <nav class="collapse navbar-collapse bs-navbar-collapse navbar-right" role="navigation">
                           <ul class="nav navbar-nav">
                             <li>
-                                <a href="[% session.app_url %]/admin"> Welcome <b>[% session.user.username %]</b> !</a>
+                                <a href="[% session.app_url %]/dashboard"> Welcome <b>[% session.user.username %]</b> !</a>
                             </li>
                             <li class="dropdown my_account"> 
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account <b class="caret"></b></a>
