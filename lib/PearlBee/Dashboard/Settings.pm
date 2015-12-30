@@ -10,7 +10,7 @@ use POSIX       'tzset';
 use XML::Simple ':strict';
 use DateTime::TimeZone;
 
-get '/dashboard/settings' => sub {
+get '/dashboard/settings' => needs_permission view_setting => sub {
     my $settings  = resultset('Setting')->first;
     my @timezones = DateTime::TimeZone->all_names;
 
@@ -20,7 +20,7 @@ get '/dashboard/settings' => sub {
     } => { layout => 'admin' };
 };
 
-post '/dashboard/settings/save' => sub {
+post '/dashboard/settings/save' => needs_permission edit_setting => sub {
     my $params    = body_parameters;
     my $path       = $params->{'path'};
     my $timezone  = $params->{'timezone'};
@@ -59,11 +59,11 @@ post '/dashboard/settings/save' => sub {
     } => { layout => 'admin' };
 };
 
-get '/dashboard/settings/import' => sub {
+get '/dashboard/settings/import' => needs_permission import => sub {
     template 'admin/settings/import' => {} => { layout => 'admin' };
 };
 
-post '/admin/settings/wp_import' => sub {
+post '/dashboard/settings/wp_import' => needs_importing import => sub {
     my $import = upload('source')
         or return template 'admin/settings/import' => {
             error => 'No file chosen for import',
@@ -100,9 +100,10 @@ post '/admin/settings/wp_import' => sub {
         },
     );
 
-    my $import_response = ( $import_handler->run_wp_import() )
-                        ? { success => 'Blog content successfuly imported!' }
-                        : { error   => 'There has been a problem with the import. Please contact support.' };
+    my $import_response =
+          ( $import_handler->run_wp_import() )
+        ? { success => 'Blog content successfuly imported!' }
+        : { error   => 'There has been a problem with the import. Please contact support.' };
 
     template 'admin/settings/import'
         => $import_response => { layout => 'admin' };
