@@ -146,22 +146,4 @@ get '/profile' => sub {
 
 };
 
-prefix '/users' => sub {
-    get '/edit/:id' => sub {
-
-    };
-
-    post '/new' => sub {
-
-    };
-
-    post '/update/:id' => sub {
-
-    };
-
-    post '/delete/:id' => sub {
-
-    };
-};
-
 1;
