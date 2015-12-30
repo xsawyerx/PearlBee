@@ -92,7 +92,7 @@ prefix '/dashboard/posts' => sub {
         my $pages_per_set   = 7;
         my $pagination      = generate_pagination_numbering($total_users, $posts_per_page, $current_page, $pages_per_set);
 
-        template '/dashboard/users/list' => {
+        template '/admin/users/list' => {
             users         => \@users,
             all           => $all,
             activated     => $activated,
@@ -160,7 +160,7 @@ prefix '/dashboard/posts' => sub {
 
 
     get '/add' => sub {
-        template 'dashboard/users/add', {},  { layout => 'admin' };
+        template 'admin/users/add', {},  { layout => 'admin' };
     };
 
     post '/add' => sub {
@@ -212,12 +212,12 @@ prefix '/dashboard/posts' => sub {
         } or do {
             my $error = $@ || 'Zombie error';
             error $error; # FIXME GH#9
-            return template 'dashboard/users/add' => {
+            return template 'admin/users/add' => {
                 warning => 'Something went wrong. Please contact the administrator.'
             } => { layout => 'admin' };
         };
 
-        template 'dashboard/users/add' => {
+        template 'admin/users/add' => {
             success => 'The user was added succesfully and will be activated after he logs in.'
         } => { layout => 'admin' };
     };

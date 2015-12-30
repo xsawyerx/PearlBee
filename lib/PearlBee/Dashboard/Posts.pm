@@ -195,7 +195,7 @@ prefix '/dashboard/posts' => sub {
           session success => undef;
         }
 
-        template 'dashboard/posts/edit' => $params => { layout => 'admin' };
+        template 'admin/posts/edit' => $params => { layout => 'admin' };
     };
 
     post '/update/:id' => needs_permission update_post => sub {
