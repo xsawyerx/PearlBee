@@ -5,7 +5,7 @@ use warnings;
 use Dancer2::Plugin;
 
 register needs_permission => sub {
-    my ( $dsl, $permission, $sub ) = @_;
+    my ( $dsl, $permission, $sub ) = plugin_args(@_);
     my $rbac = $dsl->config->{'rbac'};
 
     return sub {

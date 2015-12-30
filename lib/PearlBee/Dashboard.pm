@@ -1,7 +1,13 @@
 package PearlBee::Dashboard;
 use Dancer2 appname => 'PearlBee';
-use Dancer2::Plugin::Auth::Tiny;
 use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Auth::Tiny;
+
+BEGIN {
+    set rbac_from_session => sub {
+        resultset('User')->from_session( $_[0] );
+    };
+}
 
 use PearlBee::Password;
 use PearlBee::Dashboard::Posts;
@@ -11,7 +17,7 @@ use PearlBee::Dashboard::Categories;
 use PearlBee::Dashboard::Tags;
 use PearlBee::Dashboard::Settings;
 
-config->{'plugins'}{'Auth::Tiny'}{'logged_in_key'} = 'user';
+config->{'plugins'}{'Auth::Tiny'}{'logged_in_key'} = 'user_id';
 
 get '/dashboard' => needs login => sub {
     redirect '/dashboard/posts';

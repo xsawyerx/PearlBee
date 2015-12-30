@@ -2,6 +2,12 @@ package PearlBee;
 # ABSTRACT: PearlBee Blog platform
 use Dancer2 0.163000;
 use Dancer2::Plugin::DBIC;
+
+BEGIN {
+    use RBAC::Tiny;
+    set rbac => RBAC::Tiny->new( roles => config()->{'permissions'} || {} );
+}
+
 use Dancer2::Plugin::Auth::PearlBee;
 
 # load all components
@@ -11,10 +17,6 @@ use PearlBee::Authors;
 use PearlBee::Categories;
 use PearlBee::Tags;
 use PearlBee::Dashboard;
-
-use RBAC::Tiny;
-
-config->{'rbac'} = RBAC::Tiny->new( roles => config()->{'permissions'} || {} );
 
 hook before => sub {
     my $settings = resultset('Setting')->first;

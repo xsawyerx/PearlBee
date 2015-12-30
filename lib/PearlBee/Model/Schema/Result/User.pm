@@ -331,13 +331,4 @@ sub allow {
   $self->update({ status => 'deactivated' });
 }
 
-sub from_session {
-    my ( $self, $id, %search_args ) = @_;
-    return $self->find({
-        id     => $id,
-        status => 'activated',
-        %search_args,
-    });
-}
-
 1;
