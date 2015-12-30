@@ -22,7 +22,7 @@ register needs_permission => sub {
         $rbac->can_role( $user->role, $permission )
             or $dsl->app->redirect("/login?failure=\"$error_message\"");
 
-        var user => $user;
+        $dsl->var( user => $user );
 
         goto &$sub;
     }
