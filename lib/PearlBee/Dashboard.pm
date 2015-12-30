@@ -6,8 +6,11 @@ use PearlBee::Dashboard::Comments;
 use PearlBee::Dashboard::Categories;
 use PearlBee::Dashboard::Tags;
 use PearlBee::Dashboard::Settings;
+use Dancer2::Plugin::Auth::Tiny;
 
-get '/dashboard' => sub {
+config->{'plugins'}{'Auth::Tiny'}{'logged_in_key'} = 'user';
+
+get '/dashboard' => needs login => sub {
     redirect '/dashboard/posts';
 };
 
