@@ -3,14 +3,6 @@ use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Auth::PearlBee;
 
-use PearlBee::Helpers::Pagination qw<
-    get_total_pages
-    get_previous_next_link
-    generate_pagination_numbering
->;
-
-use URI::Escape;
-
 prefix '/dashboard/categories' => sub {
     get '' => needs_permission view_category => sub {
         my @categories = resultset('Category')->search({
