@@ -166,7 +166,7 @@ subtest 'username empty' => sub {
 
     ok(! defined schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->first, 'row was not found in the database');
 
-    $mech->content_like(qr/Please provide an username/, 'the user is presented with the expected message');
+    $mech->content_like(qr/Please provide a username/, 'the user is presented with the expected message');
 
     schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->delete;
 };

@@ -34,7 +34,7 @@ post '/sign-up' => sub {
     };
 
     my $username = $params->{'username'}
-        or return $failed_login->('Please provide an username.');
+        or return $failed_login->('Please provide a username.');
 
     my $email = $params->{'email'}
         or return $failed_login->('Please provide an email.');
