@@ -155,7 +155,7 @@ prefix '/dashboard/users' => sub {
             error $error;
         };
 
-        redirect config->{'app_url'} . '/admin/users';
+        redirect config->{'app_url'} . '/dashboard/users';
     };
 
 
