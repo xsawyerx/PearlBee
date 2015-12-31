@@ -108,7 +108,7 @@ prefix '/dashboard/posts' => sub {
     };
 
     foreach my $state (qw<activate deactivate suspend>) {
-        get "/$state/:id" => needs_permission edit_user => sub {
+        get "/$state/:id" => needs_permission update_user => sub {
             my $new_url = change_user_state(
                 route_parameters->{'id'},
                 $state,

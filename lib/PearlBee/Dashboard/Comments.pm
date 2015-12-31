@@ -80,7 +80,7 @@ prefix '/dashboard/comments' => sub {
     };
 
     foreach my $state (qw<approve trash spam pending>) {
-        get "/$state/:id" => needs_permission edit_comment => sub {
+        get "/$state/:id" => needs_permission update_comment => sub {
             my $new_url = change_comment_state(
                 route_parameters->{'id'},
                 $state,

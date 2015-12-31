@@ -73,7 +73,7 @@ prefix '/dashboard/tags' => sub {
     };
 
 
-    get '/edit/:id' => needs_permission edit_tag => sub {
+    get '/edit/:id' => needs_permission update_tag => sub {
         my $tag_id = route_parameters->{'id'};
 
         template '/admin/tags/list' => {
@@ -82,7 +82,7 @@ prefix '/dashboard/tags' => sub {
         } => { layout => 'admin' };
     };
 
-    post '/edit/:id' => needs_permission edit_tag => sub {
+    post '/edit/:id' => needs_permission update_tag => sub {
         my $tag_id = route_parameters->{'id'};
         my $name   = body_parameters->{'name'};
         my $tag    = resultset('Tag')->find($tag_id);

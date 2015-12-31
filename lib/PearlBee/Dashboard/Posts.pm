@@ -147,7 +147,7 @@ prefix '/dashboard/posts' => sub {
     };
 
     foreach my $state (qw<publish draft trash>) {
-        get "/$state/:id" => needs_permission edit_post => sub {
+        get "/$state/:id" => needs_permission update_post => sub {
             my $new_url = change_post_state(
                 route_parameters->{'id'},
                 $state,

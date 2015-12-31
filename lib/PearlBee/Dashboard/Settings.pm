@@ -20,7 +20,7 @@ get '/dashboard/settings' => needs_permission view_setting => sub {
     } => { layout => 'admin' };
 };
 
-post '/dashboard/settings/save' => needs_permission edit_setting => sub {
+post '/dashboard/settings/save' => needs_permission update_setting => sub {
     my $params    = body_parameters;
     my $path       = $params->{'path'};
     my $timezone  = $params->{'timezone'};

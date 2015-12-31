@@ -88,7 +88,7 @@ prefix '/dashboard/categories' => sub {
         redirect config->{'app_url'} . '/dashboard/categories';
     };
 
-    get '/edit/:id' => needs_permission edit_category => sub {
+    get '/edit/:id' => needs_permission update_category => sub {
         my $category_id = route_parameters->{'id'};
 
         template '/admin/categories/list' => {
@@ -101,7 +101,7 @@ prefix '/dashboard/categories' => sub {
         } => { layout => 'admin' };
     };
 
-    post '/edit/:id' => needs_permission edit_category => sub {
+    post '/edit/:id' => needs_permission update_category => sub {
         my $category_id = route_parameters->{'id'};
         my $name        = body_parameters->{'name'};
         my $category    = resultset('Category')->find($category_id);
