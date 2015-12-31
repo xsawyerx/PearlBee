@@ -20,9 +20,9 @@
            <div class="awidget-body">
               
               <a href="/dashboard/posts"> All </a>([% all %]) | 
-              <a href="/dashboard/posts/published"> Published </a>([% publish %]) | 
-              <a href="/dashboard/posts/draft"> Draft </a>([% draft %]) | 
-              <a href="/dashboard/posts/trash"> Trash </a>([% trash %])
+              <a href="/dashboard/posts?status=published"> Published </a>([% publish %]) | 
+              <a href="/dashboard/posts?status=draft"> Draft </a>([% draft %]) | 
+              <a href="/dashboard/posts?status=trash"> Trash </a>([% trash %])
 
               <table class="table table-hover table-bordered ">
                <thead>

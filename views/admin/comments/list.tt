@@ -13,10 +13,10 @@
 	        <div class="awidget-body">          
 
 	        	<a href="/dashboard/comments"> 	All </a>([% all %]) | 
-	        	<a href="/dashboard/comments/pending"> Pending </a>([% pending %]) | 
-	        	<a href="/dashboard/comments/approved"> Approved </a>([% approved %]) |
-	        	<a href="/dashboard/comments/trash"> Trash </a>([% trash %]) | 
-	        	<a href="/dashboard/comments/spam"> Spam </a>([% spam %])
+	        	<a href="/dashboard/comments?status=pending"> Pending </a>([% pending %]) | 
+	        	<a href="/dashboard/comments?status=approved"> Approved </a>([% approved %]) |
+	        	<a href="/dashboard/comments?status=trash"> Trash </a>([% trash %]) | 
+	        	<a href="/dashboard/comments?status=spam"> Spam </a>([% spam %])
 
 				<table class="table table-hover table-bordered">
 					<thead>
