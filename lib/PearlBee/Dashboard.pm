@@ -54,7 +54,7 @@ prefix '/dashboard' => sub {
         } => { layout => 'admin' };
     };
 
-    get '/edit' => needs login => sub {
+    get '/profile' => needs login => sub {
         my $user = resultset('User')->from_session( session('user_id') )
             or redirect '/';
 
