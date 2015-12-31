@@ -2,6 +2,7 @@ package PearlBee::Dashboard::Categories;
 use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Auth::PearlBee;
+use PearlBee::Helpers::Util qw/string_to_slug/;
 
 prefix '/dashboard/categories' => sub {
     get '/?' => needs_permission view_category => sub {
@@ -42,7 +43,7 @@ prefix '/dashboard/categories' => sub {
             my $category = resultset('Category')->create({
                 name    => $name,
                 slug    => $slug,
-                user_id => $user->{'id'},
+                user_id => $user->id,
             });
 
             1;
