@@ -4,7 +4,7 @@ use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Auth::PearlBee;
 
 prefix '/dashboard/categories' => sub {
-    get '' => needs_permission view_category => sub {
+    get '/?' => needs_permission view_category => sub {
         my @categories = resultset('Category')->search({
             name => { '!=' => 'Uncategorized'}
         });

@@ -33,7 +33,7 @@ sub change_post_state {
 }
 
 prefix '/dashboard/posts' => sub {
-    get '' => needs_permission view_post => sub {
+    get '/?' => needs_permission view_post => sub {
         my $page        = query_parameters->{'page'}   || 1;
         my $status      = query_parameters->{'status'} || '';
         my $nr_of_rows  = 5;

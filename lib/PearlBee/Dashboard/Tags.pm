@@ -6,7 +6,7 @@ use Dancer2::Plugin::Auth::PearlBee;
 use PearlBee::Helpers::Util 'string_to_slug';
 
 prefix '/dashboard/tags' => sub {
-    get '' => needs_permission view_tag => sub {
+    get '/?' => needs_permission view_tag => sub {
         template '/admin/tags/list' => {
             tags => [ resultset('Tag')->all ],
         } => { layout => 'admin' };

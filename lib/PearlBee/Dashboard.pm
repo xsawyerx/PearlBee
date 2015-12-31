@@ -19,7 +19,7 @@ use PearlBee::Dashboard::Settings;
 config->{'plugins'}{'Auth::Tiny'}{'logged_in_key'} = 'user_id';
 
 prefix '/dashboard' => sub {
-    get '' => needs login => sub {
+    get '/?' => needs login => sub {
         redirect '/dashboard/posts';
     };
 
