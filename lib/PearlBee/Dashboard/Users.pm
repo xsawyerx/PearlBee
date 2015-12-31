@@ -34,7 +34,7 @@ sub change_user_state {
     return config->{'app_url'} . '/dashboard/users';
 }
 
-prefix '/dashboard/posts' => sub {
+prefix '/dashboard/users' => sub {
     get '' => needs_permission view_user => sub {
         my $page        = query_parameters->{'page'} || 1;
         my $status      = query_parameters->{'status'};
