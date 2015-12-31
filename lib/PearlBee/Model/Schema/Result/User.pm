@@ -285,7 +285,7 @@ sub is_active {
 
 =head
 
-Check if the user is deactived
+Check if the user is deactivated
 
 =cut
 

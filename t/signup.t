@@ -4,6 +4,22 @@ use Email::Template;
 
 my $EmailSuccessful = 1;
 
+my $user_details = {
+    username   => 'johndoe',
+    email      => 'johndoe@gmail.com',
+    first_name => 'John',
+    last_name  => 'Doe',
+    secret     => 'zxcvb',
+};
+
+my %expected = (
+    map( +( $_ => $user_details->{$_} ), qw<
+        username email first_name last_name
+    > ),
+    role   => 'author',
+    status => 'pending',
+);
+
 {
     no warnings 'redefine';
     no strict 'refs';
@@ -24,28 +40,13 @@ subtest 'successful insert' => sub {
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
-        with_fields => {
-            username   => 'johndoe',
-            email      => 'johndoe@gmail.com',
-            first_name => 'John',
-            last_name  => 'Doe',
-            secret     => 'zxcvb',
-        },
+        with_fields => $user_details,
     }, 'Was able to submit form');
 
     # If we weren't able to test the successful case, then the tests ensuring we
     # couldn't insert will be useless, so we bail out.
     ok(my $row = schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->first, 'found row in the database')
       or BAIL_OUT 'Insert is not working, the rest of the tests are irrelevant';
-
-    my %expected = (
-        email      => 'johndoe@gmail.com',
-        first_name => 'John',
-        last_name  => 'Doe',
-        role       => 'author',
-        status     => 'pending',
-        username   => 'johndoe',
-    );
 
     is( $row->$_, $expected{$_}, "New user's $_ has the expected value" ) for keys %expected;
 
@@ -63,25 +64,10 @@ subtest 'successful insert, failed e-mail' => sub {
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
-        with_fields => {
-            username   => 'johndoe',
-            email      => 'johndoe@gmail.com',
-            first_name => 'John',
-            last_name  => 'Doe',
-            secret     => 'zxcvb',
-        },
+        with_fields => $user_details,
     }, 'Was able to submit form');
 
     ok(my $row = schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->first, 'found row in the database');
-
-    my %expected = (
-        email      => 'johndoe@gmail.com',
-        first_name => 'John',
-        last_name  => 'Doe',
-        role       => 'author',
-        status     => 'pending',
-        username   => 'johndoe',
-    );
 
     is( $row->$_, $expected{$_}, "New user's $_ has the expected value" ) for keys %expected;
 
@@ -99,11 +85,8 @@ subtest 'wrong captcha code' => sub {
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
         with_fields => {
-            username   => 'johndoe',
-            email      => 'johndoe@gmail.com',
-            first_name => 'John',
-            last_name  => 'Doe',
-            secret     => '00000',
+            %{$user_details},
+            secret => '00000',
         },
     }, 'Was able to submit form');
 
@@ -122,23 +105,14 @@ subtest 'e-mail already in use' => sub {
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
-        with_fields => {
-            username   => 'johndoe',
-            email      => 'johndoe@gmail.com',
-            first_name => 'John',
-            last_name  => 'Doe',
-            secret     => 'zxcvb',
-        },
+        with_fields => $user_details,
     }, 'Was able to submit form');
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page the second time');
     $mech->submit_form_ok({
         with_fields => {
+            %{$user_details},
             username   => 'johndoe2',
-            email      => 'johndoe@gmail.com',
-            first_name => 'John',
-            last_name  => 'Doe',
-            secret     => 'zxcvb',
         },
     }, 'Submit the form a second time');
 
@@ -158,23 +132,14 @@ subtest 'username already in use' => sub {
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
-        with_fields => {
-            username   => 'johndoe',
-            email      => 'johndoe@gmail.com',
-            first_name => 'John',
-            last_name  => 'Doe',
-            secret     => 'zxcvb',
-        },
+        with_fields => $user_details,
     }, 'Was able to submit form');
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page the second time');
     $mech->submit_form_ok({
         with_fields => {
-            username   => 'johndoe',
-            email      => 'johndoe2@gmail.com',
-            first_name => 'John',
-            last_name  => 'Doe',
-            secret     => 'zxcvb',
+            %{$user_details},
+            email => 'johndoe2@gmail.com',
         },
     }, 'Submit the form a second time');
 
@@ -194,11 +159,8 @@ subtest 'username empty' => sub {
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
         with_fields => {
-            username   => '',
-            email      => 'johndoe@gmail.com',
-            first_name => 'John',
-            last_name  => 'Doe',
-            secret     => 'zxcvb',
+            %{$user_details},
+            username => '',
         },
     }, 'Was able to submit form');
 
@@ -217,11 +179,8 @@ subtest 'email empty' => sub {
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
         with_fields => {
-            username   => 'johndoe',
-            email      => '',
-            first_name => 'John',
-            last_name  => 'Doe',
-            secret     => 'zxcvb',
+            %{$user_details},
+            email => '',
         },
     }, 'Was able to submit form');
 
