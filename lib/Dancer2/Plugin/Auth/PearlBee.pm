@@ -8,7 +8,6 @@ use URI::Escape;
 register needs_permission => sub {
     my ( $dsl, $permission, $sub ) = plugin_args(@_);
     my $rbac = $dsl->config->{'rbac'};
-    my $from_session_cb = $dsl->config->{'rbac_from_session'};
     my $error_message = uri_escape( $rbac->{'error_message'} )
                      || 'You do not have permission to access the page';
 
