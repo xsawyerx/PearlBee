@@ -33,8 +33,8 @@ sub change_comment_state {
 
 prefix '/dashboard/comments' => sub {
     get '' => needs_permission view_comment => sub {
-        my $page              = query_parameters->{'page'} || 1;
-        my $status            = query_parameters->{'status'};
+        my $page              = query_parameters->{'page'}   || 1;
+        my $status            = query_parameters->{'status'} || '';
         my $nr_of_rows        = 5;
         my $search_parameters = $status ? { status => $status } : {};
 

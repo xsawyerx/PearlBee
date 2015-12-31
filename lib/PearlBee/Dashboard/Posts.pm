@@ -34,8 +34,8 @@ sub change_post_state {
 
 prefix '/dashboard/posts' => sub {
     get '' => needs_permission view_post => sub {
-        my $page        = query_parameters->{'page'} || 1;
-        my $status      = query_parameters->{'status'};
+        my $page        = query_parameters->{'page'}   || 1;
+        my $status      = query_parameters->{'status'} || '';
         my $nr_of_rows  = 5;
         my $search_parameters = $status ? { status => $status } : {};
 
@@ -216,25 +216,22 @@ prefix '/dashboard/posts' => sub {
             my $crypted_filename;
 
             if ( upload('cover') ) {
-
                 # If the user uploaded a cover image, generate a crypted name for uploading
                 $crypted_filename = generate_crypted_filename();
                 $cover = upload('cover');
                 ($ext) = $cover->filename =~ /(\.[^.]+)$/;            #extract the extension
                 $ext = lc($ext);
-                $cover->copy_to( config->{covers_folder} . $crypted_filename . $ext );
+                $cover->copy_to( config->{'covers_folder'} . $crypted_filename . $ext );
             }
 
-            my $status = params->{status};
-            $post->update(
-                {
-                    title   => $title,
-                    slug    => $slug,
-                    cover   => ($crypted_filename) ? $crypted_filename . $ext : $post->cover,
-                    status  => $status,
-                    content => $content,
-                }
-            );
+            my $status = $params->{'status'} || '';
+            $post->update({
+                title   => $title,
+                slug    => $slug,
+                cover   => ($crypted_filename) ? $crypted_filename . $ext : $post->cover,
+                status  => $status,
+                content => $content,
+            });
 
             # Reconnect the categories with the new one and delete the old ones
             resultset('PostCategory')->connect_categories( params->{category}, $post->id );
