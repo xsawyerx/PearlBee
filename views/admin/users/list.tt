@@ -16,14 +16,14 @@
 	        </div>
 	        <div class="awidget-body">          
 
-	        	<a href="/dashboard/users/page/1"> 	All </a>([% all %]) | 
-	        	<a href="/dashboard/users/deactivated/page/1"> Deactivated </a>([% deactivated %]) | 
-	        	<a href="/dashboard/users/activated/page/1"> Activated </a>([% activated %]) |
+	        	<a href="/dashboard/users"> 	All </a>([% all %]) | 
+	        	<a href="/dashboard/users/deactivated"> Deactivated </a>([% deactivated %]) | 
+	        	<a href="/dashboard/users/activated"> Activated </a>([% activated %]) |
 				[% IF session.multiuser %]
-				  <a href="/dashboard/users/suspended/page/1"> Suspended </a>([% suspended %]) |
-				  <a href="/dashboard/users/pending/page/1"> Pending </a>([% pending %])
+				  <a href="/dashboard/users/suspended"> Suspended </a>([% suspended %]) |
+				  <a href="/dashboard/users/pending"> Pending </a>([% pending %])
 				[% ELSE %]
-				  <a href="/dashboard/users/suspended/page/1"> Suspended </a>([% suspended %])
+				  <a href="/dashboard/users/suspended"> Suspended </a>([% suspended %])
 				[% END %]
 
 				<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
