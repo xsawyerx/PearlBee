@@ -13,16 +13,11 @@ register needs_permission => sub {
                      || 'You do not have permission to access the page';
 
     return sub {
-        my $user_id = $dsl->app->session->read('user_id')
-            or $dsl->app->redirect('/login?failure="Please login first"');
-
-        my $user = $from_session_cb->($user_id)
+        my $user = vars->{'user'}
             or $dsl->app->redirect('/login?failure="Unauthorized user"');
 
         $rbac->can_role( $user->role, $permission )
             or $dsl->app->redirect("/login?failure=\"$error_message\"");
-
-        $dsl->var( user => $user );
 
         goto &$sub;
     }
