@@ -3,6 +3,8 @@ use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Auth::Tiny;
 
+# this will be removed in favor of defaults
+# and the ability to configure it
 BEGIN {
     set rbac_from_session => sub {
         resultset('User')->from_session( $_[0] );
