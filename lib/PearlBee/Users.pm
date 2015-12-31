@@ -142,8 +142,4 @@ get '/logout' => sub {
     redirect '/?logout=1';
 };
 
-get '/profile' => sub {
-
-};
-
 1;
