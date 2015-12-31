@@ -12,7 +12,7 @@
                  <!-- Sub menu -->
                  <ul>
                     <li><a href="[% session.app_url %]/dashboard/posts">All</a></li>
-                    <li><a href="[% session.app_url %]/dashboard/posts/add">Create post</a></li>
+                    <li><a href="[% session.app_url %]/dashboard/posts/new">Create post</a></li>
                 </ul>
             </li>
 
