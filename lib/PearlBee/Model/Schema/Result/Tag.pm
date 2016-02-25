@@ -100,4 +100,6 @@ __PACKAGE__->many_to_many("posts", "post_tags", "post");
 
 sub uri { '/posts/tag/' . $_[0]->slug }
 
+sub edit_uri { '/dashboard/tags/edit/' . $_[0]->id }
+
 1;
