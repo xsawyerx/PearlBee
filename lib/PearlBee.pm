@@ -11,6 +11,8 @@ use Dancer2::Plugin::DBIC;
 BEGIN {
     use RBAC::Tiny;
     set rbac => RBAC::Tiny->new( roles => config()->{'permissions'} || {} );
+
+    our $is_static = config->{static} || '';
 }
 
 # has to be *after* the configuration is set above
