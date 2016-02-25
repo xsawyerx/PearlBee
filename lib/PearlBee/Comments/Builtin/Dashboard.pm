@@ -1,4 +1,4 @@
-package PearlBee::Dashboard::Comments;
+package PearlBee::Comments::Builtin::Dashboard;
 use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Auth::PearlBee;

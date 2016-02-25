@@ -84,6 +84,11 @@ permissions:
           - allow_user
           - import
 
+comments: builtin
+comments_engines:
+  builtin:
+    foo: bar
+
 # Constants
 captcha_folder :  'public/captcha/'
 covers_folder:    'public/uploads/covers/'
