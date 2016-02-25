@@ -287,4 +287,15 @@ sub is_authorized {
   return $authorized;
 }
 
+sub get_comments {
+    my ($self) = @_;
+
+    return [
+        $self->comments->search({
+            status   => 'approved',
+            reply_to => undef,
+        })->all
+    ];
+}
+
 1;

@@ -7,27 +7,6 @@ use PearlBee::Helpers::Util       qw<map_posts>;
 use PearlBee::Helpers::Pagination qw<get_total_pages get_previous_next_link>;
 use PearlBee::Helpers::Captcha;
 
-sub get_comments {
-    my $post = shift;
-
-    PearlBee::Helpers::Captcha::new_captcha_code();
-
-    # Grab the approved comments for this post and the corresponding reply comments
-    my @comments;
-    @comments = resultset('Comment')->search({ post_id => $post->id, status => 'approved', reply_to => undef }) if ( $post );
-    foreach my $comment (@comments) {
-        my @comment_replies = resultset('Comment')->search({ reply_to => $comment->id, status => 'approved' }, {order_by => { -asc => "comment_date" }});
-        foreach my $reply (@comment_replies) {
-            my $el;
-            map { $el->{$_} = $reply->$_ } ('avatar', 'fullname', 'comment_date', 'content');
-            $el->{uid}->{username} = $reply->uid->username if $reply->uid;
-            push(@{$comment->{comment_replies}}, $el);
-        }
-    }
-
-    return @comments;
-}
-
 prefix '/posts' => sub {
     get '' => sub {
         my $nr_of_rows  = config->{'posts_on_page'}  || 5; # Number of posts per page
@@ -73,7 +52,6 @@ prefix '/posts' => sub {
             recent     => \@recent,
             popular    => \@popular,
             categories => \@categories,
-            comments   => [ get_comments($post) ],
             setting    => $settings,
             tags       => \@tags,
           };
