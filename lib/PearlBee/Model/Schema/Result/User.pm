@@ -331,4 +331,6 @@ sub allow {
   $self->update({ status => 'deactivated' });
 }
 
+sub uri { '/posts/user/' . $_[0]->username }
+
 1;

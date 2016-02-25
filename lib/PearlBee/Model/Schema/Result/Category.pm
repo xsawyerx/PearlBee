@@ -163,4 +163,6 @@ sub safe_cascade_delete {
     $self->delete();
 }
 
+sub uri { '/posts/category/' . $_[0]->slug }
+
 1;
