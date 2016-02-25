@@ -1,9 +1,9 @@
 <div class="comments" id="comments">
     <div class="title">
-        <h5>[% nr_of_comments %] [% IF (nr_of_comments == 1) %] Comment [% ELSE %] Comments [% END %]</h5>
+        <h5>[% post.nr_of_comments %] [% IF post.nr_of_comments == 1 %] Comment [% ELSE %] Comments [% END %]</h5>
     </div>
     <ul class="comment-list">
-        [% FOREACH comment in comments %]
+        [% FOREACH comment IN post.get_comments %]
             <li class="comment" id="comment_[% comment.id %]">
                 <a class="pull-left" href="#">
                     <img class="avatar" src="[% comment.avatar %]" class="img-responsive" />
@@ -38,7 +38,7 @@
                 
                 <!-- The Reply comments for this comment -->
                 <ul class="comment-list comment-replies-list">
-                    [% FOREACH reply in comment.comment_replies %]
+                    [% FOREACH reply IN comment.replies %]
                         <li class="comment reply_comment">
                             <a class="pull-left" href="#">
                                 <img class="avatar" src="[% reply.avatar %]" class="img-responsive" />

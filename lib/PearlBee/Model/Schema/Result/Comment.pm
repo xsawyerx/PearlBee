@@ -224,4 +224,20 @@ sub is_authorized {
   return $authorized;
 }
 
+sub replies {
+    my ($self) = @_;
+
+    my $replies = $self->result_source->resultset->search({
+        # FIXME: reply_to should really be a proper foreign key
+        reply_to => $self->id,
+        status   => 'approved',
+    }, {
+        order_by   => { -asc => "comment_date" },
+        join       => ['uid'],
+        '+columns' => ['uid.username'],
+    });
+
+    return [ $replies->all ];
+}
+
 1;

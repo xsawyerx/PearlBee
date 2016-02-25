@@ -291,4 +291,15 @@ sub uri { '/posts/' . $_[0]->slug . ( $PearlBee::is_static && '.html ' ) }
 
 sub edit_uri { '/dashboard/posts/edit/' . $_[0]->slug }
 
+sub get_comments {
+    my ($self) = @_;
+
+    return [
+        $self->comments->search({
+            status   => 'approved',
+            reply_to => undef,
+        })->all
+    ];
+}
+
 1;
