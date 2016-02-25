@@ -84,10 +84,10 @@ permissions:
           - allow_user
           - import
 
-comments: builtin
+comments: disqus
 comments_engines:
-  builtin:
-    foo: bar
+    disqus:
+        shortname: mydisqusshortname
 
 # Constants
 captcha_folder :  'public/captcha/'
