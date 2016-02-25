@@ -102,4 +102,6 @@ sub uri { '/posts/tag/' . $_[0]->slug }
 
 sub edit_uri { '/dashboard/tags/edit/' . $_[0]->id }
 
+sub delete_uri { '/dashboard/tags/delete/' . $_[0]->id }
+
 1;
