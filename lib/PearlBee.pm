@@ -23,6 +23,7 @@ use PearlBee::Authors;
 use PearlBee::Categories;
 use PearlBee::Tags;
 use PearlBee::Dashboard;
+use PearlBee::Comments;
 
 hook before => sub {
     my $settings = resultset('Setting')->first;

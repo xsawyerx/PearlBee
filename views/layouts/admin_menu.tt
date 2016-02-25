@@ -16,7 +16,7 @@
                 </ul>
             </li>
 
-            <li><a href="[% session.app_url %]/dashboard/comments"><i class="icon-comment"></i> Comments</a></li>
+            <li><a href="[% comments_engine.comment_dashboard_link %]"><i class="icon-comment"></i> Comments</a></li>
 
             [% IF (vars.user.is_admin) %]
 
