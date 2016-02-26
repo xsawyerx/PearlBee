@@ -34,7 +34,7 @@ function install_database() {
     echo 'installing database'
     dbicadmin -Ilib --deploy --connect-info dsn="dbi:SQLite:dbname=$project_dir/db.sqlite"\
         --schema-class PearlBee::Model::Schema --sql-type SQLite
-    # TODO: Run inserts
+    perl $script_dir/load-initial-data "dbi:SQLite:dbname=$project_dir/db.sqlite"
 }
 
 ensure_we_have_cpanm_ll;

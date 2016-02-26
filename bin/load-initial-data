@@ -1,0 +1,35 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use FindBin '$Bin';
+use lib "$Bin/../lib";
+use PearlBee::Model::Schema;
+
+my ($dsn, $user, $password) = @ARGV;
+
+my $schema = PearlBee::Model::Schema->connect($dsn, $user, $password);
+
+my $admin = $schema->resultset('User')->create({
+    first_name     => 'Default',
+    last_name      => 'Admin',
+    username       => 'admin',
+    password       => 'ddd8f33fbc8fd3ff70ea1d3768e7c5c151292d3a8c0972',
+    email          => 'admin@admin.com',
+    role           => 'admin',
+    activation_key => 'activated',
+    salt           => 'IQbmVFR+SEgTju9y+UzhwA==',
+});
+
+$admin->create_related(
+    categories => {
+        name => 'Uncategorized',
+        slug => 'uncategorized',
+    }
+);
+
+$schema->resultset('Setting')->create({
+    timezone     => 'Europe/Bucharest',
+    theme_folder => '/',
+    blog_name    => 'PearlBee',
+    id           => 0, # wat
+});
