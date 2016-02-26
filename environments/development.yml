@@ -4,12 +4,12 @@
 # console: log messages to STDOUT (your console where you started the
 #          application server)
 # file:    log message to a file in log/
-logger: "file"
+logger: "console"
 
 # the log level for this environment
 # core is the lowest, it shows Dancer2's core log messages as well as yours
 # (debug, info, warning and error)
-log: "error"
+log: "info"
 
 # should Dancer2 consider warnings as critical errors?
 warnings: 1
@@ -19,3 +19,10 @@ show_errors: 1
 
 # print the banner
 startup_info: 1
+
+plugins:
+  DBIC:
+    default:
+      dsn: dbi:SQLite:db.sqlite
+      options:
+        sqlite_unicode: 1
