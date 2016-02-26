@@ -1,14 +1,20 @@
 package PearlBee::Helpers::Captcha;
-use Authen::Captcha;
 use Dancer2 appname => 'PearlBee';
 
-my $captcha = Authen::Captcha->new(
-    data_folder   => config->{'captcha_folder'},
-    output_folder => config->{'captcha_folder'} .'/image',
-);
+my $captcha;
+
+if (config->{'capcha_enabled'}) {
+    require Authen::Captcha;
+    $captcha = Authen::Captcha->new(
+        data_folder   => config->{'captcha_folder'},
+        output_folder => config->{'captcha_folder'} . '/image',
+    );
+}
 
 sub new_captcha_code {
-    my $code = generate_captcha();
+    return 1 if ! config->{'captcha_enabled'};
+
+    my $code = $captcha->generate_code(5);
 
     session secret  => $code;
 
@@ -20,6 +26,8 @@ sub new_captcha_code {
 }
 
 sub check_captcha_code {
+    return 1 if ! config->{'captcha_enabled'};
+
     my $code = shift;
 
     foreach my $secret ( @{ session->{'data'}{'secrets'} || [] } ) {
@@ -30,11 +38,6 @@ sub check_captcha_code {
     }
 
     return;
-}
-
-# Generate a new captcha code in MD5
-sub generate_captcha {
-    return $captcha->generate_code(5);
 }
 
 1;

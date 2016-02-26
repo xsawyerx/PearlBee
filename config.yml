@@ -98,3 +98,4 @@ email_signature:       'The PearlBee Team'
 default_email_sender:  'no-reply@pearlbee.com'
 welcome_email_subject: 'Welcome to PearlBee!'
 posts_on_page:         5
+captcha_enabled:       0 # use 1 to enable captchas
