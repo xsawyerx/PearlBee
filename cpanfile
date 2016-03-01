@@ -1,5 +1,6 @@
 requires 'DBIx::Class';
 requires 'Dancer2' => 0.163000;
+requires 'RBAC::Tiny' => 0.003;
 requires 'Dancer2::Plugin::DBIC';
 requires 'Dancer2::Plugin::REST';
 requires 'DateTime';
@@ -23,6 +24,7 @@ requires 'Gravatar::URL';
 requires 'HTML::Strip';
 requires 'Template::Plugin::HTML::Strip';
 requires 'GD';
+requires 'Dancer2::Plugin::Auth::Tiny';
 
 # speed up Dancer2
 requires 'Scope::Guard';
@@ -31,6 +33,7 @@ requires 'CGI::Deurl::XS';
 requires 'HTTP::Parser::XS';
 requires 'Math::Random::ISAAC::XS';
 
+# DBIx::Class
 requires 'MooseX::Types::JSON';
 requires 'MooseX::Types::LoadableClass';
 requires 'MooseX::Types::Path::Class';

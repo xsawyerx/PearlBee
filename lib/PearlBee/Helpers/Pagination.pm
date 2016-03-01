@@ -1,6 +1,10 @@
 package PearlBee::Helpers::Pagination;
 
+use strict;
+use warnings;
 use Data::Pageset;
+use URI;
+use URI::QueryParam;
 
 require Exporter;
 our @ISA 		= qw(Exporter);
@@ -27,14 +31,22 @@ Generate the urls for the next and previous buttons
 =cut
 
 sub get_previous_next_link {
-	my ($page, $total_pages, $custom_link) = @_;
+    my ($page, $total_pages, $custom_link) = @_;
+    my ($previous_link, $next_link) = ('#', '#');
 
-	$custom_link = $custom_link || '';
+    my $uri = URI->new($custom_link);
 
-	my $previous_link = ( $page == 1 ) ? '#' : $custom_link . '/page/' . ( int($page) - 1 );
-  	my $next_link     = ( $page == $total_pages ) ? '#' : $custom_link . '/page/' . ( int($page) + 1 );
+    if ($page > 1) {
+        $previous_link = $uri->clone;
+        $previous_link->query_param( page => $page  - 1 );
+    }
 
-  	return ($previous_link, $next_link);
+    if ($page < $total_pages) {
+        $next_link = $uri->clone;
+        $next_link->query_param( page => $page  + 1 );
+    }
+
+    return ($previous_link, $next_link);
 }
 
 =head

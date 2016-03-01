@@ -47,6 +47,43 @@ plugins:
             PrintError: 1
             mysql_enable_utf8: 1
 
+
+permissions:
+    author:
+        can:
+          - view_post
+          - create_post
+          - publish_post
+          - update_post
+          - delete_post
+          - view_category
+          - create_category
+          - update_category
+          - delete_category
+          - view_comment
+          - update_comment
+          - view_tag
+          - update_tag
+          - delete_tag
+          - view_setting
+          - update_setting
+    limited_author:
+        all_from:
+          - author
+        except:
+          - publish_post
+    admin:
+        all_from:
+          - author
+        can:
+          - global_settings
+          - view_user
+          - create_user
+          - update_user
+          - delete_user
+          - allow_user
+          - import
+
 # Constants
 captcha_folder :  'public/captcha/'
 covers_folder:    'public/uploads/covers/'

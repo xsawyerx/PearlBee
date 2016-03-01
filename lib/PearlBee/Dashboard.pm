@@ -1,119 +1,116 @@
 package PearlBee::Dashboard;
-
-use Dancer2;
+use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Auth::Tiny;
+
 use PearlBee::Password;
+use PearlBee::Dashboard::Posts;
+use PearlBee::Dashboard::Users;
+use PearlBee::Dashboard::Comments;
+use PearlBee::Dashboard::Categories;
+use PearlBee::Dashboard::Tags;
+use PearlBee::Dashboard::Settings;
 
-=head
+# it is how we're using Auth::Tiny in the code
+# so we configure it in the code as well
+# (maybe we should add "user" key as a boolean
+#  or maybe add a user to the session every time
+#  a user logs in)
+config->{'plugins'}{'Auth::Tiny'}{'logged_in_key'} = 'user_id';
 
-Check if the user has authorization for this part of the web site
+prefix '/dashboard' => sub {
+    get '/?' => needs login => sub {
+        redirect '/dashboard/posts';
+    };
 
-=cut
-
-hook 'before' => sub {
-  my $user = session('user');
-
-  redirect session('app_url') . '/'  if ( !$user );
-};
-
-=head
-
-Dashboard index
-
-=cut
-
-any '/dashboard' => sub {
-
-  my $user = session('user');
-     $user = resultset('User')->find( $user->{id} );
-
-  if ( $user->status eq 'deactivated' ) {
-
-    if ( params->{password1} ) {
-      my $password1 = params->{password1};
-      my $password2 = params->{password2};
-
-      if ( $password1 ne $password2 ) {
-        template 'admin/index', { user => $user, warning => 'The passwords don\'t match!' }, { layout => 'admin' };
-      }
-      else {
-	      my $password_hash = generate_hash($password1);
-        $user->update({
-          password => $password_hash->{hash},
-          status   => 'activated',
-	        salt 	   => $password_hash->{salt}
+    post '' => needs login => sub {
+        my $user = resultset('User')->search({
+            id => session('user_id'),
         });
 
-        template 'admin/index', { user => $user }, { layout => 'admin' };
-      }
-    }
-    else {
-      template 'admin/index', { user => $user }, { layout => 'admin' };
-    }
-  }
-  else {
-    redirect session('app_url') . '/admin/posts'  if ( $user->is_admin );
-    redirect session('app_url') . '/author/posts';
-  }
+        $user->status eq 'deactivated'
+            or template 'admin/index'
+                 => { user   => $user   }
+                 => { layout => 'admin' };
 
-};
+        my $password1 = body_parameters->{'password1'};
+        my $password2 = body_parameters->{'password2'};
 
-=head
+        $password1 eq $password2
+            or return template 'admin/index' => {
+                user    => $user,
+                warning => 'The passwords don\'t match!'
+            } => { layout => 'admin' };
 
-Edit profile
+        my $password_hash = generate_hash($password1);
+        $user->update({
+            password => $password_hash->{'hash'},
+            salt     => $password_hash->{'salt'},
+            status   => 'activated',
+        });
 
-=cut
+        template 'admin/index' => {
+            user => $user
+        } => { layout => 'admin' };
+    };
 
-any '/profile' => sub {
+    get '/profile' => needs login => sub {
+        my $user = resultset('User')->from_session( session('user_id') )
+            or redirect '/';
 
-  my $user = session('user');
-  $user    = resultset('User')->find( $user->{id} );
+        template 'admin/profile' => {
+            user => $user
+        } => { layout => 'admin' };
+    };
 
-  my $first_name = params->{first_name};
-  my $last_name  = params->{last_name};
-  my $email      = params->{email};
+    post '/edit' => needs login => sub {
+        my $user          = resultset('User')->from_session( session('user_id') );
+        my $params        = body_parameters;
+        my $first_name    = $params->{'first_name'};
+        my $last_name     = $params->{'last_name'};
+        my $email         = $params->{'email'};
+        my $old_password  = delete $params->{'old_password'};
+        my $new_password  = delete $params->{'new_password'};
+        my $new_password2 = delete $params->{'new_password2'};
 
-  my $old_password   = params->{old_password};
-  my $new_password   = params->{new_password};
-  my $new_password2  = params->{new_password2};
+        my %update_parameters = map +(
+            $_ => $params->{$_}
+        ), qw<first_name last_name email>;
 
-  if ( $first_name && $last_name && $email ) {
+        if ( $old_password && $new_password && $new_password2 ) {
+            my $generated_password = generate_hash($old_password, $user->salt);
+            $generated_password->{'hash'} eq $user->password
+                or return template 'admin/profile' => {
+                    user    => $user,
+                    warning => 'Incorrect old password!',
+                } => { layout => 'admin' };
 
-    $user->update({
-        first_name   => $first_name,
-        last_name   => $last_name,
-        email     => $email
-      });
 
-    template 'admin/profile', { user => $user, success => 'Your data was updated succesfully!' }, { layout => 'admin' };
+            $new_password eq $new_password2
+                or return template 'admin/profile' => {
+                    user    => $user,
+                    warning => 'The new passwords don\'t match!',
+                } => { layout => 'admin' };
 
-  }
-  elsif ( $old_password && $new_password && $new_password2 ) {
+            $generated_password = generate_hash($new_password);
+            $update_parameters{'password'} = $generated_password->{'hash'};
+            $update_parameters{'salt'}     = $generated_password->{'salt'};
+        } elsif ( $old_password || $new_password || $new_password2 ) {
+            return template 'admin/profile' => {
+                user    => $user,
+                warning => 'Must fill all password fields to update password',
+            } => { layout => 'admin' };
+        }
 
-    my $password_hash = generate_hash($old_password, $user->salt);
-    if ( $password_hash->{hash} ne $user->password ) {
+        $user->update(\%update_parameters);
 
-      template 'admin/profile', { user => $user, warning => 'Incorrect old password!' }, { layout => 'admin' };
+        return template 'admin/profile' => {
+            user    => $user,
+            success => 'Your data was updated succesfully!',
+        } => { layout => 'admin' };
 
-    }
-    elsif ( $new_password ne $new_password2 ) {
-
-      template 'admin/profile', { user => $user, warning => 'The new passwords don\'t match!' }, { layout => 'admin' };
-
-    }
-    else {
-      $password_hash = generate_hash($new_password);
-      $user->update({ password => $password_hash->{hash}, salt => $password_hash->{salt} });
-
-      template 'admin/profile', { user => $user, success => 'The password was changed succesfully!' }, { layout => 'admin' };
-    }
-  }
-  else {
-
-    template 'admin/profile', { user => $user }, { layout => 'admin' };
-
-  }
-
+        redirect '/dashboard/edit';
+    };
 };
 
 1;
