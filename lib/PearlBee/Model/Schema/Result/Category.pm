@@ -163,7 +163,7 @@ sub safe_cascade_delete {
     $self->delete();
 }
 
-sub uri { '/posts/category/' . $_[0]->slug }
+sub uri { '/posts/category/' . $_[0]->slug . ( $PearlBee::is_static && '.html ' ) }
 
 sub edit_uri { '/dashboard/categories/edit/' . $_[0]->id }
 

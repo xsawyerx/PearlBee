@@ -287,7 +287,7 @@ sub is_authorized {
   return $authorized;
 }
 
-sub uri { '/posts/' . $_[0]->slug }
+sub uri { '/posts/' . $_[0]->slug . ( $PearlBee::is_static && '.html ' ) }
 
 sub edit_uri { '/dashboard/posts/edit/' . $_[0]->slug }
 

@@ -11,6 +11,8 @@ use Dancer2::Plugin::DBIC;
 BEGIN {
     use RBAC::Tiny;
     set rbac => RBAC::Tiny->new( roles => config()->{'permissions'} || {} );
+
+    our $is_static = config->{static} || '';
 }
 
 # has to be *after* the configuration is set above
@@ -22,7 +24,7 @@ use PearlBee::Users;
 use PearlBee::Authors;
 use PearlBee::Categories;
 use PearlBee::Tags;
-use PearlBee::Dashboard;
+use if $PearlBee::is_static, 'PearlBee::Dashboard';
 
 hook before => sub {
     my $settings = resultset('Setting')->first;

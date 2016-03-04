@@ -331,6 +331,6 @@ sub allow {
   $self->update({ status => 'deactivated' });
 }
 
-sub uri { '/posts/user/' . $_[0]->username }
+sub uri { '/posts/user/' . $_[0]->username . ( $PearlBee::is_static && '.html ' ) }
 
 1;
