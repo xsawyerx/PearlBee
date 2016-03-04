@@ -163,4 +163,10 @@ sub safe_cascade_delete {
     $self->delete();
 }
 
+sub uri { '/posts/category/' . $_[0]->slug }
+
+sub edit_uri { '/dashboard/categories/edit/' . $_[0]->id }
+
+sub delete_uri { '/dashboard/categories/delete/' . $_[0]->id }
+
 1;
