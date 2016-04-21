@@ -1,4 +1,5 @@
-requires 'Moose';
+requires 'Moo';
+requires 'Type::Tiny';
 requires 'Dancer2' => 0.163000;
 requires 'Dancer2::Plugin::DBIC';
 requires 'Dancer2::Plugin::REST';

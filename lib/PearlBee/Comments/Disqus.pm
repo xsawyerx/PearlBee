@@ -1,6 +1,6 @@
 package PearlBee::Comments::Disqus;
-use Moose;
-use namespace::autoclean;
+use Moo;
+use Types::Standard qw/HashRef Str/;
 with 'PearlBee::Role::CommentsEngine';
 
 has '+post_comment_count_template' => (
@@ -21,10 +21,10 @@ has '+comments_dashboard_link' => (
 
 has shortname => (
     is => 'ro',
-    isa => 'Str',
+    isa => Str,
     required => 1,
 );
 
-__PACKAGE__->meta->make_immutable();
+no Moo;
 
 1;

@@ -1,8 +1,7 @@
 package PearlBee::Comments::Builtin;
-use Moose;
+use Moo;
 use PearlBee::Comments::Builtin::AddComment;
 use PearlBee::Comments::Builtin::Dashboard;
-use namespace::autoclean;
 
 with 'PearlBee::Role::CommentsEngine';
 
@@ -22,6 +21,5 @@ has '+comments_dashboard_link' => (
     default => sub { $_[0]->_app_config->{app_url} . '/admin/comments' },
 );
 
-__PACKAGE__->meta->make_immutable();
-
+no Moo;
 1;
