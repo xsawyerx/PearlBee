@@ -26,6 +26,7 @@ my %expected = (
 
     # The alternative would be trying to mess with the current code in the
     # session, which is even uglier...
+    *PearlBee::Helpers::Captcha::new_captcha_code   = sub { 'zxcvb' };
     *PearlBee::Helpers::Captcha::check_captcha_code = sub { $_[0] eq 'zxcvb' };
 
     # The alternative would be using Email::Sender and using the Test transport
