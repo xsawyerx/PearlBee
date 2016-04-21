@@ -18,8 +18,8 @@ This is the base structure of the blog -->
    
     [% INCLUDE theme/scripts.tt %]
 
-    [% IF comments_engine.scripts_tt -%]
-    [%- INCLUDE $comments_engine.scripts_tt -%]
+    [% IF comments_engine.scripts_template -%]
+    [%- INCLUDE $comments_engine.scripts_template -%]
     [%- END %]
 
   </body>

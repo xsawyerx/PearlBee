@@ -6,16 +6,16 @@ use namespace::autoclean;
 
 with 'PearlBee::Role::CommentsEngine';
 
-has '+post_comment_count_tt' => (
-    default => 'comments/builtin/post_comment_count.tt',
+has '+post_comment_count_template' => (
+    default => sub { 'comments/builtin/post_comment_count.tt' },
 );
 
-has '+comment_form_tt' => (
-    default => 'comments/builtin/comment_form.tt',
+has '+comment_form_template' => (
+    default => sub { 'comments/builtin/comment_form.tt' },
 );
 
-has '+list_comments_tt' => (
-    default => 'comments/builtin/list_comments.tt',
+has '+list_comments_template' => (
+    default => sub { 'comments/builtin/list_comments.tt' },
 );
 
 has '+comments_dashboard_link' => (

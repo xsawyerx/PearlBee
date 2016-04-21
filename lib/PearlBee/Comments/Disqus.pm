@@ -3,16 +3,16 @@ use Moose;
 use namespace::autoclean;
 with 'PearlBee::Role::CommentsEngine';
 
-has '+post_comment_count_tt' => (
-    default => 'comments/disqus/post_comment_count.tt',
+has '+post_comment_count_template' => (
+    default => sub { 'comments/disqus/post_comment_count.tt' },
 );
 
-has '+list_comments_tt' => (
-    default => 'comments/disqus/list_comments_tt.tt',
+has '+list_comments_template' => (
+    default => sub { 'comments/disqus/list_comments.tt' },
 );
 
-has '+scripts_tt' => (
-    default => 'comments/disqus/scripts.tt',
+has '+scripts_template' => (
+    default => sub { 'comments/disqus/scripts.tt' },
 );
 
 has '+comments_dashboard_link' => (

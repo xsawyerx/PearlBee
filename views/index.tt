@@ -45,8 +45,8 @@
                       </div>
                     [% END %]
 
-                    [% IF comments_engine.post_comment_count_tt %]
-                    [% INCLUDE $comments_engine.post_comment_count_tt %]
+                    [% IF comments_engine.post_comment_count_template %]
+                    [% INCLUDE $comments_engine.post_comment_count_template %]
                     [% END %]
                  </div>
                  

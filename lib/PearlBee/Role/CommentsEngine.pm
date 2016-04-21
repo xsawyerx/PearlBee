@@ -7,22 +7,22 @@ has _app_config => (
     required => 1,
 );
 
-has post_comment_count_tt => (
+has post_comment_count_template => (
     is => 'ro',
     isa => 'Str',
 );
 
-has comment_form_tt => (
+has comment_form_template => (
     is => 'ro',
     isa => 'Str',
 );
 
-has scripts_tt => (
+has scripts_template => (
     is => 'ro',
     isa => 'Str',
 );
 
-has list_comments_tt => (
+has list_comments_template => (
     is => 'ro',
     isa => 'Str',
 );
