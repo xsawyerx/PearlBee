@@ -1,6 +1,7 @@
 package PearlBee::Comments::Builtin::AddComment;
 use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
+use PearlBee::Helpers::Captcha;
 
 post '/comment/add' => sub {
   my $parameters  = body_parameters;
@@ -92,7 +93,7 @@ post '/comment/add' => sub {
   }
   $template_params->{comments} = \@comments;
 
-  new_captcha_code();
+  PearlBee::Helpers::Captcha::new_captcha_code();
 
   template 'post', $template_params;
 };
