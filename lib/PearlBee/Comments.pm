@@ -9,7 +9,6 @@ my $camelized = Dancer2::Core::camelize($name);
 my $component_class = "PearlBee::Comments::$camelized";
 
 load_class($component_class);
-load_optional_class("${component_class}::Endpoints");
 
 my $config = config->{comments_engines}{$name} || {};
 $config->{_app_config} = config;

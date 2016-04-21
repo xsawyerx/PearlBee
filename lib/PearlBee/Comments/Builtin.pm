@@ -1,6 +1,9 @@
 package PearlBee::Comments::Builtin;
 use Moose;
+use PearlBee::Comments::Builtin::AddComment;
+use PearlBee::Comments::Builtin::Dashboard;
 use namespace::autoclean;
+
 with 'PearlBee::Role::CommentsEngine';
 
 has '+post_comment_count_tt' => (
