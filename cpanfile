@@ -8,6 +8,7 @@ requires 'RBAC::Tiny' => 0.003;
 requires 'DBIx::Class';
 requires 'HTML::Strip';
 requires 'Template::Plugin::HTML::Strip';
+requires 'Module::Runtime';
 
 requires 'DateTime';
 requires 'DateTime::TimeZone';

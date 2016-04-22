@@ -1,21 +1,21 @@
 package PearlBee::Comments;
 use Dancer2 appname => 'PearlBee';
 use Dancer2::Core;
-use Class::Load qw(load_class load_optional_class);
+use Module::Runtime qw(use_module compose_module_name);
 use Carp qw(croak);
 
-my $name = config->{comments} || 'builtin';
-my $camelized = Dancer2::Core::camelize($name);
-my $component_class = "PearlBee::Comments::$camelized";
+my $name            = config->{comments} || 'builtin';
+my $camelized       = Dancer2::Core::camelize($name);
+my $component_class = compose_module_name( 'PearlBee::Comments', $camelized );
 
-load_class($component_class);
+use_module($component_class);
 
 my $config = config->{comments_engines}{$name} || {};
 $config->{_app_config} = config;
 
-my $Engine = $component_class->new($config);
+my $Engine = $component_class->new( $config );
 
-if (!$Engine->does('PearlBee::Role::CommentsEngine')) {
+if ( !$Engine->does('PearlBee::Role::CommentsEngine') ) {
     croak "Engine $name does not use role CommentsEngine";
 }
 
