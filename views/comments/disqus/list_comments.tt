@@ -2,8 +2,8 @@
     <div id="disqus_thread"></div>
     <script>
         var disqus_config = function () {
-            this.page.url        = "[% settings.app_url _ request.path %]";
-            this.page.identifier = "[% settings.app_url _ request.path %]";
+            this.page.url        = "[% request.uri_for( request.path ) %]";
+            this.page.identifier = "[% request.uri_for( request.path ) %]";
         };
         (function() {
             var d = document, s = d.createElement('script');
