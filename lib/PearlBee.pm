@@ -24,7 +24,7 @@ use PearlBee::Users;
 use PearlBee::Authors;
 use PearlBee::Categories;
 use PearlBee::Tags;
-use if $PearlBee::is_static, 'PearlBee::Dashboard';
+use if !$PearlBee::is_static, 'PearlBee::Dashboard';
 
 hook before => sub {
     my $settings = resultset('Setting')->first;
