@@ -11,7 +11,9 @@ use HTTP::Cookies;
 use PearlBee;
 use PearlBee::Model::Schema;
 
-our @EXPORT = ('app', 'mech', 'schema');
+our @EXPORT = qw/ app mech schema logs /;
+
+PearlBee::set(logger => 'capture');
 
 sub import {
     my ($caller) = @_;
@@ -27,6 +29,8 @@ sub mech {
 }
 
 sub app { PearlBee::app() }
+
+sub logs { app->logger_engine->trapper->read }
 
 sub schema {
     my $config = PearlBee::config->{plugins}{DBIC}{default};

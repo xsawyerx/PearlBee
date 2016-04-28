@@ -38,6 +38,7 @@ subtest 'successful insert' => sub {
     my $mech = mech;
 
     schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->delete;
+    $EmailSuccessful = 1;
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
@@ -59,9 +60,8 @@ subtest 'successful insert' => sub {
 subtest 'successful insert, failed e-mail' => sub {
     my $mech = mech;
 
-    $EmailSuccessful = 0;
-
     schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->delete;
+    $EmailSuccessful = 0;
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
@@ -74,6 +74,11 @@ subtest 'successful insert, failed e-mail' => sub {
 
     $mech->content_like(qr/Could not send the email/, 'the user is presented with the expected message');
 
+    my $logs = logs;
+    like( $logs->[0]->{message}, qr/Could not send the email/, 'the error is logged' );
+    is( $logs->[0]->{level}, 'error', "the log level is 'error'");
+    is( scalar @$logs, 1, 'exactly 1 error was logged' );
+
     schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->delete;
 };
 
@@ -82,6 +87,7 @@ subtest 'wrong captcha code' => sub {
     my $mech = mech;
 
     schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->delete;
+    $EmailSuccessful = 1;
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
@@ -95,6 +101,11 @@ subtest 'wrong captcha code' => sub {
 
     $mech->content_like(qr/Invalid secret code/, 'the user is presented with the expected message');
 
+    my $logs = logs;
+    like( $logs->[0]->{message}, qr/Invalid secret code/, 'the error (Invalid secret code) is logged' );
+    is( $logs->[0]->{level}, 'error', "the log level is 'error'");
+    is( scalar @$logs, 1, 'exactly 1 error was logged' );
+
     schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->delete;
 };
 
@@ -103,6 +114,7 @@ subtest 'e-mail already in use' => sub {
 
     schema->resultset('User')->search({ username => 'johndoe' })->delete;
     schema->resultset('User')->search({ username => 'johndoe2' })->delete;
+    $EmailSuccessful = 1;
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
@@ -121,6 +133,11 @@ subtest 'e-mail already in use' => sub {
 
     $mech->content_like(qr/Email address already in use/, 'the user is presented with the expected message');
 
+    my $logs = logs;
+    like( $logs->[0]->{message}, qr/Email address already in use/, 'the error (Email address already in use) is logged' );
+    is( $logs->[0]->{level}, 'error', "the log level is 'error'");
+    is( scalar @$logs, 1, 'exactly 1 error was logged' );
+
     schema->resultset('User')->search({ username => 'johndoe' })->delete;
     schema->resultset('User')->search({ username => 'johndoe2' })->delete;
 };
@@ -130,6 +147,7 @@ subtest 'username already in use' => sub {
 
     schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->delete;
     schema->resultset('User')->search({ email => 'johndoe2@gmail.com' })->delete;
+    $EmailSuccessful = 1;
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
@@ -148,6 +166,11 @@ subtest 'username already in use' => sub {
 
     $mech->content_like(qr/Username already in use/, 'the user is presented with the expected message');
 
+    my $logs = logs;
+    like( $logs->[0]->{message}, qr/Username already in use/, 'the error (Username already in use) is logged' );
+    is( $logs->[0]->{level}, 'error', "the log level is 'error'");
+    is( scalar @$logs, 1, 'exactly 1 error was logged' );
+
     schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->delete;
     schema->resultset('User')->search({ email => 'johndoe2@gmail.com' })->delete;
 };
@@ -156,6 +179,7 @@ subtest 'username empty' => sub {
     my $mech = mech;
 
     schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->delete;
+    $EmailSuccessful = 1;
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
@@ -169,6 +193,11 @@ subtest 'username empty' => sub {
 
     $mech->content_like(qr/Please provide a username/, 'the user is presented with the expected message');
 
+    my $logs = logs;
+    like( $logs->[0]->{message}, qr/Please provide a username/, 'the error (Please provide a username) is logged' );
+    is( $logs->[0]->{level}, 'error', "the log level is 'error'");
+    is( scalar @$logs, 1, 'exactly 1 error was logged' );
+
     schema->resultset('User')->search({ email => 'johndoe@gmail.com' })->delete;
 };
 
@@ -176,6 +205,7 @@ subtest 'email empty' => sub {
     my $mech = mech;
 
     schema->resultset('User')->search({ username => 'johndoe' })->delete;
+    $EmailSuccessful = 1;
 
     $mech->get_ok('/sign-up', 'Sign-up returns a page');
     $mech->submit_form_ok({
@@ -188,6 +218,11 @@ subtest 'email empty' => sub {
     ok(! defined schema->resultset('User')->search({ username => 'johndoe' })->first, 'row was not found in the database');
 
     $mech->content_like(qr/Please provide an email/, 'the user is presented with the expected message');
+
+    my $logs = logs;
+    like( $logs->[0]->{message}, qr/Please provide an email/, 'the error (Please provide an email) is logged' );
+    is( $logs->[0]->{level}, 'error', "the log level is 'error'");
+    is( scalar @$logs, 1, 'exactly 1 error was logged' );
 
     schema->resultset('User')->search({ username => 'johndoe' })->delete;
 };
