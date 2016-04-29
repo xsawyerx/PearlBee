@@ -25,26 +25,25 @@ __PACKAGE__->result_source_instance->view_definition(
 );
 
 __PACKAGE__->add_columns(
-  "published",
-  { data_type => "integer", is_nullable => 0 },
-  "trash",
-  { data_type => "integer", is_nullable => 0 },
-  "draft",
-  { data_type => "integer", is_nullable => 0 },
-  "total",
-  { data_type => "integer", is_nullable => 0 },
+    "published", { data_type => "integer", is_nullable => 0 },
+    "trash",     { data_type => "integer", is_nullable => 0 },
+    "draft",     { data_type => "integer", is_nullable => 0 },
+    "total",     { data_type => "integer", is_nullable => 0 },
 );
 
 sub get_all_status_counts {
-  my $self = shift;
+    my $self = shift;
 
-  return ( $self->total, $self->published, $self->draft, $self->trash );
+    return ( $self->total, $self->published, $self->draft, $self->trash );
 }
 
 sub get_status_count {
-  my ($self, $status) = @_;
+    my ( $self, $status ) = @_;
 
-  return ( $status eq 'published' ) ? $self->published : ( $status eq 'trash' ) ? $self->trash : $self->draft;
+    return
+          ( $status eq 'published' ) ? $self->published
+        : ( $status eq 'trash' )     ? $self->trash
+        :                              $self->draft;
 }
 
 1;

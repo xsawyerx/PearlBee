@@ -26,14 +26,14 @@ __PACKAGE__->result_source_instance->view_definition(
 );
 
 __PACKAGE__->add_columns(
-  "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "name",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
-  "slug",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
-  "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "id",
+    { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+    "name",
+    { data_type => "varchar", is_nullable => 0, size => 100 },
+    "slug",
+    { data_type => "varchar", is_nullable => 0, size => 100 },
+    "user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 

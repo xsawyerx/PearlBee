@@ -33,29 +33,30 @@ __PACKAGE__->result_source_instance->view_definition(
 );
 
 __PACKAGE__->add_columns(
-  "pending",
-  { data_type => "integer", is_nullable => 0 },
-  "approved",
-  { data_type => "integer", is_nullable => 0 },
-  "trash",
-  { data_type => "integer", is_nullable => 0 },
-  "spam",
-  { data_type => "integer", is_nullable => 0 },
-  "total",
-  { data_type => "integer", is_nullable => 0 },
+    "pending",  { data_type => "integer", is_nullable => 0 },
+    "approved", { data_type => "integer", is_nullable => 0 },
+    "trash",    { data_type => "integer", is_nullable => 0 },
+    "spam",     { data_type => "integer", is_nullable => 0 },
+    "total",    { data_type => "integer", is_nullable => 0 },
 );
 
 sub get_all_status_counts {
-  my $self = shift;
+    my $self = shift;
 
-  return ( $self->total, $self->approved, $self->trash, $self->spam, $self->pending );
+    return (
+        $self->total, $self->approved, $self->trash,
+        $self->spam,  $self->pending
+    );
 }
 
 sub get_status_count {
-  my ($self, $status) = @_;
+    my ( $self, $status ) = @_;
 
-  return ( $status eq 'pending' ) ? $self->pending : ( $status eq 'approved' ) ? $self->approved : ( $status eq 'trash' ) ? $self->trash : $self->spam;
+    return
+          ( $status eq 'pending' )  ? $self->pending
+        : ( $status eq 'approved' ) ? $self->approved
+        : ( $status eq 'trash' )    ? $self->trash
+        :                             $self->spam;
 }
-
 
 1;

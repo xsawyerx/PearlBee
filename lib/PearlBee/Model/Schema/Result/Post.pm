@@ -1,4 +1,5 @@
 use utf8;
+
 package PearlBee::Model::Schema::Result::Post;
 
 # Created by DBIx::Class::Schema::Loader
@@ -81,34 +82,34 @@ __PACKAGE__->table("post");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "title",
-  { data_type => "varchar", is_nullable => 0, size => 255 },
-  "slug",
-  { data_type => "varchar", is_nullable => 0, size => 255 },
-  "description",
-  { data_type => "varchar", is_nullable => 1, size => 255 },
-  "cover",
-  { data_type => "varchar", is_nullable => 0, size => 300 },
-  "content",
-  { data_type => "text", is_nullable => 0 },
-  "created_date",
-  {
-    data_type => "timestamp",
-    datetime_undef_if_invalid => 1,
-    default_value => \"current_timestamp",
-    is_nullable => 0,
-  },
-  "status",
-  {
-    data_type => "enum",
-    default_value => "draft",
-    extra => { list => ["published", "trash", "draft"] },
-    is_nullable => 1,
-  },
-  "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "id",
+    { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+    "title",
+    { data_type => "varchar", is_nullable => 0, size => 255 },
+    "slug",
+    { data_type => "varchar", is_nullable => 0, size => 255 },
+    "description",
+    { data_type => "varchar", is_nullable => 1, size => 255 },
+    "cover",
+    { data_type => "varchar", is_nullable => 0, size => 300 },
+    "content",
+    { data_type => "text", is_nullable => 0 },
+    "created_date",
+    {
+        data_type                 => "timestamp",
+        datetime_undef_if_invalid => 1,
+        default_value             => \"current_timestamp",
+        is_nullable               => 0,
+    },
+    "status",
+    {
+        data_type     => "enum",
+        default_value => "draft",
+        extra         => { list => [ "published", "trash", "draft" ] },
+        is_nullable   => 1,
+    },
+    "user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -134,10 +135,10 @@ Related object: L<PearlBee::Model::Schema::Result::Comment>
 =cut
 
 __PACKAGE__->has_many(
-  "comments",
-  "PearlBee::Model::Schema::Result::Comment",
-  { "foreign.post_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "comments",
+    "PearlBee::Model::Schema::Result::Comment",
+    { "foreign.post_id" => "self.id" },
+    { cascade_copy      => 0, cascade_delete => 0 },
 );
 
 =head2 post_categories
@@ -149,10 +150,10 @@ Related object: L<PearlBee::Model::Schema::Result::PostCategory>
 =cut
 
 __PACKAGE__->has_many(
-  "post_categories",
-  "PearlBee::Model::Schema::Result::PostCategory",
-  { "foreign.post_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "post_categories",
+    "PearlBee::Model::Schema::Result::PostCategory",
+    { "foreign.post_id" => "self.id" },
+    { cascade_copy      => 0, cascade_delete => 0 },
 );
 
 =head2 post_tags
@@ -164,10 +165,10 @@ Related object: L<PearlBee::Model::Schema::Result::PostTag>
 =cut
 
 __PACKAGE__->has_many(
-  "post_tags",
-  "PearlBee::Model::Schema::Result::PostTag",
-  { "foreign.post_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "post_tags",
+    "PearlBee::Model::Schema::Result::PostTag",
+    { "foreign.post_id" => "self.id" },
+    { cascade_copy      => 0, cascade_delete => 0 },
 );
 
 =head2 user
@@ -179,10 +180,10 @@ Related object: L<PearlBee::Model::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "user",
-  "PearlBee::Model::Schema::Result::User",
-  { id => "user_id" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+    "user",
+    "PearlBee::Model::Schema::Result::User",
+    { id            => "user_id" },
+    { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 categories
@@ -193,7 +194,7 @@ Composing rels: L</post_categories> -> category
 
 =cut
 
-__PACKAGE__->many_to_many("categories", "post_categories", "category");
+__PACKAGE__->many_to_many( "categories", "post_categories", "category" );
 
 =head2 tags
 
@@ -203,12 +204,10 @@ Composing rels: L</post_tags> -> tag
 
 =cut
 
-__PACKAGE__->many_to_many("tags", "post_tags", "tag");
-
+__PACKAGE__->many_to_many( "tags", "post_tags", "tag" );
 
 # Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-23 16:54:04
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5V6erZKi9jLOYo38x62HWg
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 
@@ -219,12 +218,12 @@ Get the number of comments for this post
 =cut
 
 sub nr_of_comments {
-  my ($self) = @_;
+    my ($self) = @_;
 
-  my @post_comments = $self->comments;
-  my @comments = grep { $_->status eq 'approved' } @post_comments;
+    my @post_comments = $self->comments;
+    my @comments = grep { $_->status eq 'approved' } @post_comments;
 
-  return scalar @comments;
+    return scalar @comments;
 }
 
 =head
@@ -234,15 +233,15 @@ Get all tags as a string sepparated by a comma
 =cut
 
 sub get_string_tags {
-  my ($self) = @_;
+    my ($self) = @_;
 
-  my @tag_names;
-  my @post_tags = $self->post_tags;
-  push( @tag_names, $_->tag->name ) foreach ( @post_tags );
+    my @tag_names;
+    my @post_tags = $self->post_tags;
+    push( @tag_names, $_->tag->name ) foreach (@post_tags);
 
-  my $joined_tags = join(', ', @tag_names);
+    my $joined_tags = join( ', ', @tag_names );
 
-  return $joined_tags;
+    return $joined_tags;
 }
 
 =head 
@@ -252,22 +251,22 @@ Status updates
 =cut
 
 sub publish {
-  my ($self, $user) = @_;
+    my ( $self, $user ) = @_;
 
-  $self->update({ status => 'published' }) if ( $self->is_authorized( $user ) );
+    $self->update( { status => 'published' } )
+        if ( $self->is_authorized($user) );
 }
 
 sub draft {
-  my ($self, $user) = @_;
+    my ( $self, $user ) = @_;
 
-  $self->update({ status => 'draft' }) if ( $self->is_authorized( $user ) );
+    $self->update( { status => 'draft' } ) if ( $self->is_authorized($user) );
 }
 
-
 sub trash {
-  my ($self, $user) = @_;
+    my ( $self, $user ) = @_;
 
-  $self->update({ status => 'trash' }) if ( $self->is_authorized( $user ) );
+    $self->update( { status => 'trash' } ) if ( $self->is_authorized($user) );
 }
 
 =haed
@@ -277,14 +276,14 @@ Check if the user has enough authorization for modifying
 =cut
 
 sub is_authorized {
-  my ($self, $user) = @_;
+    my ( $self, $user ) = @_;
 
-  my $schema     = $self->result_source->schema;
-  my $authorized = 0;
-  $authorized    = 1 if ( $user->is_admin );
-  $authorized    = 1 if ( !$user->is_admin && $self->user_id == $user->id );
+    my $schema     = $self->result_source->schema;
+    my $authorized = 0;
+    $authorized = 1 if ( $user->is_admin );
+    $authorized = 1 if ( !$user->is_admin && $self->user_id == $user->id );
 
-  return $authorized;
+    return $authorized;
 }
 
 sub uri { '/posts/' . $_[0]->slug . ( $PearlBee::is_static && '.html ' ) }
@@ -295,10 +294,12 @@ sub get_comments {
     my ($self) = @_;
 
     return [
-        $self->comments->search({
-            status   => 'approved',
-            reply_to => undef,
-        })->all
+        $self->comments->search(
+            {
+                status   => 'approved',
+                reply_to => undef,
+            }
+        )->all
     ];
 }
 

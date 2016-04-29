@@ -6,7 +6,7 @@ use Dancer2::Plugin::Auth::PearlBee;
 use PearlBee::Helpers::Util qw/generate_crypted_filename/;
 use PearlBee::Helpers::Import;
 
-use POSIX       'tzset';
+use POSIX 'tzset';
 use XML::Simple ':strict';
 use DateTime::TimeZone;
 
@@ -22,30 +22,33 @@ get '/dashboard/settings' => needs_permission view_setting => sub {
 
 post '/dashboard/settings/save' => needs_permission update_setting => sub {
     my $params    = body_parameters;
-    my $path       = $params->{'path'};
+    my $path      = $params->{'path'};
     my $timezone  = $params->{'timezone'};
     my $blog_name = $params->{'blog_name'};
 
     # bool to 0 or 1
-    my $social_media = int !! $params->{'social_media'};
-    my $multiuser    = int !! $params->{'multiuser'};
+    my $social_media = int !!$params->{'social_media'};
+    my $multiuser    = int !!$params->{'multiuser'};
 
     my %msg;
     my $settings;
     eval {
         $settings = resultset('Setting')->first;
 
-        $settings->update({
-            timezone     => $timezone,
-            social_media => ($social_media ? '1' : '0'),
-            multiuser    => ($multiuser ? '1' : '0'),
-            blog_name    => $blog_name
-        });
+        $settings->update(
+            {
+                timezone     => $timezone,
+                social_media => ( $social_media ? '1' : '0' ),
+                multiuser    => ( $multiuser ? '1' : '0' ),
+                blog_name    => $blog_name
+            }
+        );
 
         $msg{'success'} = 'The settings have been saved!';
 
         1;
     } or do {
+
         # FIXME: GH#9
         my $error = $@ || 'Zombie error';
         error $error;
@@ -65,18 +68,17 @@ get '/dashboard/settings/import' => needs_permission import => sub {
 
 post '/dashboard/settings/wp_import' => needs_permission import => sub {
     my $import = upload('source')
-        or return template 'admin/settings/import' => {
-            error => 'No file chosen for import',
-        } => { layout => 'admin' };
+        or return template 'admin/settings/import' =>
+        { error => 'No file chosen for import', } => { layout => 'admin' };
 
     my $import_filename = generate_crypted_filename();
-    my ($ext)           = $import->filename =~ /(\.[^.]+)$/; # extract the extension
-    $ext                = lc $ext;
+    my ($ext) = $import->filename =~ /(\.[^.]+)$/; # extract the extension
+    $ext = lc $ext;
 
     $ext eq '.xml'
-        or return template 'admin/settings/import' => {
-            error   => 'File format not supported. Please choose an .xml file!'
-        } => { layout => 'admin' };
+        or return template 'admin/settings/import' =>
+        { error => 'File format not supported. Please choose an .xml file!' }
+        => { layout => 'admin' };
 
     $import_filename .= $ext;
     $import->copy_to( config->{'import_folder'} . $import_filename );
@@ -89,9 +91,9 @@ post '/dashboard/settings/wp_import' => needs_permission import => sub {
     );
 
     $parsed_file
-        or return template 'admin/settings/import' => {
-            error   => 'File format not supported. Please choose an .xml file!'
-        } => { layout => 'admin' };
+        or return template 'admin/settings/import' =>
+        { error => 'File format not supported. Please choose an .xml file!' }
+        => { layout => 'admin' };
 
     my $import_handler = PearlBee::Helpers::Import->new(
         args => {
@@ -100,13 +102,15 @@ post '/dashboard/settings/wp_import' => needs_permission import => sub {
         },
     );
 
-    my $import_response =
-          ( $import_handler->run_wp_import() )
+    my $import_response
+        = ( $import_handler->run_wp_import() )
         ? { success => 'Blog content successfuly imported!' }
-        : { error   => 'There has been a problem with the import. Please contact support.' };
+        : { error =>
+            'There has been a problem with the import. Please contact support.'
+        };
 
-    template 'admin/settings/import'
-        => $import_response => { layout => 'admin' };
+    template 'admin/settings/import' => $import_response =>
+        { layout => 'admin' };
 };
 
 1;

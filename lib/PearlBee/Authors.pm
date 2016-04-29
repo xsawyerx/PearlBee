@@ -1,4 +1,5 @@
 package PearlBee::Authors;
+
 # ABSTRCT: Author-related paths
 use Dancer2 appname => 'PearlBee';
 

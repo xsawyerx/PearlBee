@@ -7,36 +7,40 @@ use PearlBee::Helpers::Util 'string_to_slug';
 
 prefix '/dashboard/tags' => sub {
     get '/?' => needs_permission view_tag => sub {
-        template '/admin/tags/list' => {
-            tags => [ resultset('Tag')->all ],
-        } => { layout => 'admin' };
+        template '/admin/tags/list' =>
+            { tags => [ resultset('Tag')->all ], } => { layout => 'admin' };
     };
 
     post '/add' => needs_permission create_tag => sub {
         my $name = body_parameters->{'name'};
         my $slug = string_to_slug( body_parameters->{'slug'} );
 
-        my $found_slug_or_name = resultset('Tag')->search({
-            -or => [ slug => $slug, name => $name ]
-        })->first;
+        my $found_slug_or_name = resultset('Tag')->search(
+            {
+                -or => [ slug => $slug, name => $name ]
+            }
+        )->first;
 
         $found_slug_or_name
             and return template '/admin/tags/list' => {
-                warning => 'The tag name or slug already exists',
-                tags    => [ resultset('Tag')->all ],
+            warning => 'The tag name or slug already exists',
+            tags    => [ resultset('Tag')->all ],
             } => { layout => 'admin' };
 
         my %msg;
         eval {
-            resultset('Tag')->create({
-                name => $name,
-                slug => $slug,
-            });
+            resultset('Tag')->create(
+                {
+                    name => $name,
+                    slug => $slug,
+                }
+            );
 
             $msg{'success'} = 'The category was successfully added.';
 
             1;
         } or do {
+
             # FIXME: GH#9
             my $error = $@ || 'Zombie error';
             error $error;
@@ -64,6 +68,7 @@ prefix '/dashboard/tags' => sub {
 
             1;
         } or do {
+
             # FIXME: GH#9
             my $error = $@ || 'Zombie error';
             error $error;
@@ -71,7 +76,6 @@ prefix '/dashboard/tags' => sub {
 
         redirect config->{'app_url'} . '/dashboard/tags';
     };
-
 
     get '/edit/:id' => needs_permission update_tag => sub {
         my $tag_id = route_parameters->{'id'};
@@ -89,31 +93,41 @@ prefix '/dashboard/tags' => sub {
         my $slug   = string_to_slug( body_parameters->{'slug'} );
         my $params = {};
 
-        my $found_slug = resultset('Tag')->search({
-            id   => { '!=' => $tag_id },
-            slug => $slug,
-        })->first and $params->{'warning'} = 'The tag slug already exists';
+        my $found_slug = resultset('Tag')->search(
+            {
+                id   => { '!=' => $tag_id },
+                slug => $slug,
+            }
+            )->first
+            and $params->{'warning'} = 'The tag slug already exists';
 
-        my $found_name = resultset('Tag')->search({
-            id   => { '!=' => $tag_id },
-            name => $name,
-        })->first and $params->{'warning'} = 'The tag name already exists';
-
-        $params->{'warning'} or eval {
-            $tag->update({
+        my $found_name = resultset('Tag')->search(
+            {
+                id   => { '!=' => $tag_id },
                 name => $name,
-                slug => $slug
-            });
+            }
+            )->first
+            and $params->{'warning'} = 'The tag name already exists';
+
+        $params->{'warning'}
+            or eval {
+            $tag->update(
+                {
+                    name => $name,
+                    slug => $slug
+                }
+            );
 
             $params->{'success'} = 'The tag was updated successfully';
 
             1;
-        } or do {
+            } or do {
+
             # FIXME: GH#9
             my $error = $@ || 'Zombie error';
             error $error;
             redirect '/dashboard/tags';
-        };
+            };
 
         template '/admin/tags/list' => {
             tag  => $tag,
