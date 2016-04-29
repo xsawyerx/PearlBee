@@ -60,3 +60,8 @@ feature 'wp_import', 'Import posts from WordPress' => sub {
     requires 'LWP::Simple';
     requires 'File::Path';
 };
+
+on 'develop' => sub {
+    requires 'Code::TidyAll';
+    requires 'Text::Diff' => 1.44;
+};

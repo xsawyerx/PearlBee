@@ -1,0 +1,5 @@
+[PerlTidy]
+select = {lib,t}/**/*.{pl,pm,t,psgi}
+select = bin/app.{pl,psgi}
+;ignore = t/var/**/*
+argv = --profile=$ROOT/.perltidyrc

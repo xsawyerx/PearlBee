@@ -1,4 +1,5 @@
 package PearlBee;
+
 # ABSTRACT: PearlBee Blog platform
 use Dancer2 0.163000;
 use Dancer2::Plugin::DBIC;

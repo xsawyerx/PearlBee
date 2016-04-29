@@ -1,5 +1,5 @@
-use utf8;
 package PearlBee::Model::Schema::Result::Comment;
+use utf8;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -92,38 +92,38 @@ __PACKAGE__->table("comment");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "content",
-  { data_type => "text", is_nullable => 1 },
-  "fullname",
-  { data_type => "varchar", is_nullable => 1, size => 100 },
-  "email",
-  { data_type => "varchar", is_nullable => 1, size => 200 },
-  "website",
-  { data_type => "varchar", is_nullable => 1, size => 255 },
-  "avatar",
-  { data_type => "varchar", is_nullable => 1, size => 255 },
-  "comment_date",
-  {
-    data_type => "timestamp",
-    datetime_undef_if_invalid => 1,
-    default_value => \"current_timestamp",
-    is_nullable => 0,
-  },
-  "status",
-  {
-    data_type => "enum",
-    default_value => "pending",
-    extra => { list => ["approved", "spam", "pending", "trash"] },
-    is_nullable => 1,
-  },
-  "post_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "uid",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "reply_to",
-  { data_type => "integer", is_nullable => 1 },
+    "id",
+    { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+    "content",
+    { data_type => "text", is_nullable => 1 },
+    "fullname",
+    { data_type => "varchar", is_nullable => 1, size => 100 },
+    "email",
+    { data_type => "varchar", is_nullable => 1, size => 200 },
+    "website",
+    { data_type => "varchar", is_nullable => 1, size => 255 },
+    "avatar",
+    { data_type => "varchar", is_nullable => 1, size => 255 },
+    "comment_date",
+    {
+        data_type                 => "timestamp",
+        datetime_undef_if_invalid => 1,
+        default_value             => \"current_timestamp",
+        is_nullable               => 0,
+    },
+    "status",
+    {
+        data_type     => "enum",
+        default_value => "pending",
+        extra       => { list => [ "approved", "spam", "pending", "trash" ] },
+        is_nullable => 1,
+    },
+    "post_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "uid",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+    "reply_to",
+    { data_type => "integer", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -149,10 +149,10 @@ Related object: L<PearlBee::Model::Schema::Result::Post>
 =cut
 
 __PACKAGE__->belongs_to(
-  "post",
-  "PearlBee::Model::Schema::Result::Post",
-  { id => "post_id" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+    "post",
+    "PearlBee::Model::Schema::Result::Post",
+    { id            => "post_id" },
+    { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 uid
@@ -164,46 +164,46 @@ Related object: L<PearlBee::Model::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "uid",
-  "PearlBee::Model::Schema::Result::User",
-  { id => "uid" },
-  {
-    is_deferrable => 1,
-    join_type     => "LEFT",
-    on_delete     => "RESTRICT",
-    on_update     => "RESTRICT",
-  },
+    "uid",
+    "PearlBee::Model::Schema::Result::User",
+    { id => "uid" },
+    {
+        is_deferrable => 1,
+        join_type     => "LEFT",
+        on_delete     => "RESTRICT",
+        on_update     => "RESTRICT",
+    },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-03-12 11:32:06
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kXOgl6BN015P4v3rssxB+g
 
-
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 
 sub approve {
-  my ($self, $user) = @_;
+    my ( $self, $user ) = @_;
 
-  $self->update({ status => 'approved'}) if ( $self->is_authorized( $user ) );
+    $self->update( { status => 'approved' } )
+        if ( $self->is_authorized($user) );
 }
 
 sub trash {
-  my ($self, $user) = @_;
+    my ( $self, $user ) = @_;
 
-  $self->update({ status => 'trash'}) if ( $self->is_authorized( $user ) );
+    $self->update( { status => 'trash' } ) if ( $self->is_authorized($user) );
 }
 
 sub spam {
-  my ($self, $user) = @_;
+    my ( $self, $user ) = @_;
 
-  $self->update({ status => 'spam'}) if ( $self->is_authorized( $user ) );
+    $self->update( { status => 'spam' } ) if ( $self->is_authorized($user) );
 }
 
 sub pending {
-  my ($self, $user) = @_;
+    my ( $self, $user ) = @_;
 
-  $self->update({ status => 'pending'}) if ( $self->is_authorized( $user ) );
+    $self->update( { status => 'pending' } )
+        if ( $self->is_authorized($user) );
 }
 
 =haed
@@ -213,29 +213,25 @@ Check if the user has enough authorization for modifying
 =cut
 
 sub is_authorized {
-  my ($self, $user) = @_;
-
-  my $schema     = $self->result_source->schema;
-  $user          = $schema->resultset('User')->find( $user->{id} );
-  my $authorized = 0;
-  $authorized    = 1 if ( $user->is_admin );
-  $authorized    = 1 if ( !$user->is_admin && $self->post->user_id == $user->id );
-
-  return $authorized;
+    my ( $self, $user ) = @_;
+    return ( $user->is_admin || $self->post->user_id == $user->id );
 }
 
 sub replies {
     my ($self) = @_;
 
-    my $replies = $self->result_source->resultset->search({
-        # FIXME: reply_to should really be a proper foreign key
-        reply_to => $self->id,
-        status   => 'approved',
-    }, {
-        order_by   => { -asc => "comment_date" },
-        join       => ['uid'],
-        '+columns' => ['uid.username'],
-    });
+    my $replies = $self->result_source->resultset->search(
+        {
+            # FIXME: reply_to should really be a proper foreign key
+            reply_to => $self->id,
+            status   => 'approved',
+        },
+        {
+            order_by   => { -asc => "comment_date" },
+            join       => ['uid'],
+            '+columns' => ['uid.username'],
+        }
+    );
 
     return [ $replies->all ];
 }
