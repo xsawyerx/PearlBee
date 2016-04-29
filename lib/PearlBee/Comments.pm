@@ -10,8 +10,9 @@ my $component_class = compose_module_name( 'PearlBee::Comments', $camelized );
 
 use_module($component_class);
 
-my $config = config->{comments_engines}{$name} || {};
-$config->{_app_config} = config;
+my $config = config->{'comments_engines'}{$name} || {};
+$config->{'_app_config'} = config;
+$config->{'template'}    = app->template_engine;
 
 my $Engine = $component_class->new( $config );
 
@@ -21,8 +22,7 @@ if ( !$Engine->does('PearlBee::Role::CommentsEngine') ) {
 
 hook before_template_render => sub {
     my ($tokens) = @_;
-
-    $tokens->{comments_engine} = $Engine;
+    $tokens->{'comments_engine'} = $Engine;
 };
 
 1;

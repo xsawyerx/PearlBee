@@ -47,6 +47,8 @@ prefix '/posts' => sub {
         my @recent     = resultset('Post')->search({ status => 'published' },{ order_by => { -desc => "created_date" }, rows => 3 });
         my @popular    = resultset('View::PopularPosts')->search({}, { rows => 3 });
 
+        PearlBee::Helpers::Captcha::new_captcha_code();
+
         template post => {
             post       => $post,
             recent     => \@recent,

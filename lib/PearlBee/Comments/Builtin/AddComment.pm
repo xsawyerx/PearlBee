@@ -15,7 +15,7 @@ post '/comment/add' => sub {
   my @popular     = resultset('View::PopularPosts')->search({}, { rows => 3 });
   my $user        = session('user');
 
-  $parameters->{'reply_to'} = $1 if ($parameters->{'in_reply_to'} =~ /(\d+)/);
+  ( $parameters->{'reply_to'} ) = $parameters->{'in_reply_to'} =~ /(\d+)/g;
   if ($parameters->{'reply_to'}) {
     my $comm = resultset('Comment')->find({ id => $parameters->{'reply_to'} });
     if ($comm) {
@@ -32,7 +32,7 @@ post '/comment/add' => sub {
     warning     => 'The secret code is incorrect'
   };
 
-  if ( check_captcha_code($secret) ) {
+  if ( PearlBee::Helpers::Captcha::check_captcha_code($secret) ) {
     # The user entered the correct secret code
     eval {
 

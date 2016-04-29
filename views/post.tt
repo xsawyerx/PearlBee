@@ -26,9 +26,7 @@
                                 </div>
                             [% END %]
 
-                            [% IF comments_engine.post_comment_count_template %]
-                            [% INCLUDE $comments_engine.post_comment_count_template %]
-                            [% END %]
+                            [% comments_engine.render("post_comment_count_template") %]
                         </div>
 
                         <!-- Thumbnail -->
@@ -45,14 +43,12 @@
                     </div>
                     
                     <!-- Comment posting -->
-                    [% IF ! settings.static and comments_engine.comment_form_template -%]
-                    [%- INCLUDE $comments_engine.comment_form_template -%]
+                    [% IF ! settings.static -%]
+                    [%- comments_engine.render("comment_form_template") -%]
                     [% END %]
                 
                     <!-- Comment section -->
-                    [% IF comments_engine.list_comments_template -%]
-                    [%- INCLUDE $comments_engine.list_comments_template -%]
-                    [%- END %]
+                    [%- comments_engine.render("list_comments_template") -%]
                 </div>
             </div>
         </div>

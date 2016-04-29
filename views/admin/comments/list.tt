@@ -36,7 +36,7 @@
 									[% IF comment.fullname %]
 									   <b> [% comment.fullname %] </b>
 									[% ELSE %]
-									   <b> <i class="icon-user"></i> <a href="/posts/user/[% comment.uid.username %]">[% comment.uid.username %]</a></b>
+									   <b> <i class="icon-user"></i> <a href="/post/user/[% comment.uid.username %]">[% comment.uid.username %]</a></b>
 									[% END %]
 									<br />
 									[% IF comment.email %]
@@ -85,14 +85,14 @@
 									[% END %]
 								</td>
 
-								<td width="15%"> <a href="/post/[% comment.post.slug %]"> [% comment.post.title %] </a> </td>
+								<td width="15%"> <a href="/posts/[% comment.post.slug %]"> [% comment.post.title %] </a> </td>
 								
 								 <td width="10%">
 									[% IF comment.reply_to %]
-    								   <a href="/post/[% comment.post.slug %]#comment_[% comment.reply_to %]"> Reply </a>
+    								   <a href="/posts/[% comment.post.slug %]#comment_[% comment.reply_to %]"> Reply </a>
 									[% ELSE %]
 									   [% IF comment.status == 'approved' %]
-										  <a href="/post/[% comment.post.slug %]#comment_[% comment.id %]"> Comment </a>
+										  <a href="/posts/[% comment.post.slug %]#comment_[% comment.id %]"> Comment </a>
 									   [% ELSE %]
 										  Comment
 									   [% END %]

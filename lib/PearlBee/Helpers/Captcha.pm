@@ -3,7 +3,7 @@ use Dancer2 appname => 'PearlBee';
 
 my $captcha;
 
-if (config->{'capcha_enabled'}) {
+if (config->{'captcha_enabled'}) {
     require Authen::Captcha;
     $captcha = Authen::Captcha->new(
         data_folder   => config->{'captcha_folder'},
@@ -30,7 +30,7 @@ sub check_captcha_code {
 
     my $code = shift;
 
-    foreach my $secret ( @{ session->{'data'}{'secrets'} || [] } ) {
+    foreach my $secret ( @{ session('secrets') || [] } ) {
         if ( $captcha->check_code( $code, $secret ) == 1 ) {
             session secrets => [];
             return 1;

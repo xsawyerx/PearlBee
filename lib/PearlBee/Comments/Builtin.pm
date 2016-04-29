@@ -18,7 +18,7 @@ has '+list_comments_template' => (
 );
 
 has '+comments_dashboard_link' => (
-    default => sub { $_[0]->_app_config->{app_url} . '/admin/comments' },
+    default => sub { $_[0]->_app_config->{app_url} . '/dashboard/comments' },
 );
 
 no Moo;

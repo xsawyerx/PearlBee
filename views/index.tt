@@ -45,9 +45,7 @@
                       </div>
                     [% END %]
 
-                    [% IF comments_engine.post_comment_count_template %]
-                    [% INCLUDE $comments_engine.post_comment_count_template %]
-                    [% END %]
+                    [% comments_engine.render("post_comment_count_template") %]
                  </div>
                  
                  <!-- Post cover -->
