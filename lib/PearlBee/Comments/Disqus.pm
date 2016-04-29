@@ -9,21 +9,17 @@ has shortname => (
     required => 1,
 );
 
-has '+post_comment_count_template' => (
-    default => sub { 'comments/disqus/post_comment_count.tt' },
-);
+has '+post_comment_count_template' =>
+    ( default => sub {'comments/disqus/post_comment_count'}, );
 
-has '+list_comments_template' => (
-    default => sub { 'comments/disqus/list_comments.tt' },
-);
+has '+list_comments_template' =>
+    ( default => sub {'comments/disqus/list_comments'}, );
 
-has '+scripts_template' => (
-    default => sub { 'comments/disqus/scripts.tt' },
-);
+has '+scripts_template' => ( default => sub {'comments/disqus/scripts'}, );
 
-has '+comments_dashboard_link' => (
-    default => sub { 'https://' . $_[0]->shortname . '.disqus.com/admin/' },
-);
+has '+comments_dashboard_link' =>
+    ( default => sub { 'https://' . $_[0]->shortname . '.disqus.com/admin/' },
+    );
 
 no Moo;
 
