@@ -21,6 +21,8 @@ use base 'DBIx::Class::Core';
 
 __PACKAGE__->table("user");
 
+__PACKAGE__->load_components(qw/EncodedColumn Core/);
+
 =head1 ACCESSORS
 
 =head2 id
@@ -49,9 +51,9 @@ __PACKAGE__->table("user");
 
 =head2 password
 
-  data_type: 'varchar'
+  data_type: 'char'
   is_nullable: 0
-  size: 100
+  size: 59
 
 =head2 register_date
 
@@ -98,12 +100,6 @@ __PACKAGE__->table("user");
   extra: {list => ["deactivated","activated","suspended","pending"]}
   is_nullable: 0
 
-=head2 salt
-
-  data_type: 'char'
-  is_nullable: 0
-  size: 24
-
 =cut
 
 __PACKAGE__->add_columns(
@@ -116,7 +112,15 @@ __PACKAGE__->add_columns(
   "username",
   { data_type => "varchar", is_nullable => 0, size => 200 },
   "password",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
+  {
+    data_type           => "char",
+    is_nullable         => 0,
+    size                => 59,
+    encode_column       => 1,
+    encode_class        => 'Crypt::Eksblowfish::Bcrypt',
+    encode_args         => { key_nul => 0, cost => 8 },
+    encode_check_method => 'check_password',
+  },
   "register_date",
   {
     data_type => "timestamp",
@@ -146,8 +150,6 @@ __PACKAGE__->add_columns(
     extra => { list => ["deactivated", "activated", "suspended", "pending"] },
     is_nullable => 0,
   },
-  "salt",
-  { data_type => "char", is_nullable => 0, size => 24 },
 );
 
 =head1 PRIMARY KEY

@@ -2,14 +2,11 @@ package PearlBee::Helpers::Util;
 
 use Data::GUID;
 use String::Dirify;
-use String::Random;
 use String::Util 'trim';
-
-use PearlBee::Password;
 
 require Exporter;
 our @ISA 		= qw(Exporter);
-our @EXPORT_OK 	= qw/generate_crypted_filename generate_new_slug_name string_to_slug map_posts create_password/;
+our @EXPORT_OK 	= qw/generate_crypted_filename generate_new_slug_name string_to_slug map_posts/;
 
 
 =head
@@ -108,21 +105,6 @@ sub map_posts {
 	}
 
 	return @mapped_posts;
-}
-
-=head
-
-Create a password
-
-=cut
-
-sub create_password {
-	
-    my $pass       = new String::Random;
-    my $password   = $pass->randpattern("Ccc!cCn");
-    my $pass_hash  = generate_hash($password);
-
-	return $password, $pass_hash->{hash}, $pass_hash->{salt};
 }
 
 1;
