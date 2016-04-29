@@ -2,9 +2,8 @@ package PearlBee::Users;
 # ABSTRACT: User-related paths
 use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
-use PearlBee::Password 'generate_hash';
 use PearlBee::Helpers::Captcha;
-use PearlBee::Helpers::Util 'create_password';
+use String::Random qw<random_string>;
 
 use DateTime;
 use Email::Template;
@@ -56,12 +55,11 @@ post '/sign-up' => sub {
         my $settings = resultset('Setting')->first;
         $dt->set_time_zone( $settings->timezone );
 
-        my ($password, $pass_hash, $salt) = create_password();
+        my $password = random_string('Ccc!cCn');
 
         resultset('User')->create({
             username      => $username,
-            password      => $pass_hash,
-            salt          => $salt,
+            password      => $password,
             email         => $email,
             first_name    => $params->{'first_name'},
             last_name     => $params->{'last_name'},
@@ -128,8 +126,7 @@ post '/login' => sub {
         ]
     }) or redirect '/login?failed=1';
 
-    my $password_hash = generate_hash($password, $user->salt);
-    $user->password eq $password_hash->{hash}
+    $user->check_password($password)
         or redirect '/login?failed=1';
 
     session user_id => $user->id;

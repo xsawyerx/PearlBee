@@ -15,9 +15,8 @@ requires 'DateTime::TimeZone';
 
 requires 'Data::GUID';
 requires 'Data::Pageset';
-requires 'Data::Entropy::Algorithms';
-requires 'Digest';
-requires 'Digest::Bcrypt';
+requires 'DBIx::Class::EncodedColumn';
+requires 'Crypt::Eksblowfish::Bcrypt';
 
 requires 'String::Dirify';
 requires 'String::Random';

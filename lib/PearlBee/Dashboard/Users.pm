@@ -9,7 +9,7 @@ use PearlBee::Helpers::Pagination qw<
     generate_pagination_numbering
 >;
 
-use PearlBee::Helpers::Util qw<create_password>;
+use String::Random qw<random_string>;
 
 use DateTime;
 use URI::Escape;
@@ -125,8 +125,8 @@ prefix '/dashboard/users' => sub {
             or redirect config->{'app_url'} . '/dashboard/users';
 
         eval {
-            my ($password, $pass_hash, $salt) = create_password();
-            $user->update({ password => $pass_hash, salt => $salt });
+            my $password = random_string('Ccc!cCn');
+            $user->update({ password => $password });
             $user->allow();
 
             Email::Template->send(
@@ -170,7 +170,7 @@ prefix '/dashboard/users' => sub {
             my $settings = resultset('Setting')->first;
             $dt->set_time_zone( $settings->timezone );
 
-            my ($password, $pass_hash, $salt) = create_password();
+            my $password   = random_string('Ccc!cCn');
             my $params     = body_parameters;
             my $username   = $params->{'username'};
             my $email      = $params->{'email'};
@@ -180,8 +180,7 @@ prefix '/dashboard/users' => sub {
 
             resultset('User')->create({
                 username        => $username,
-                password        => $pass_hash,
-                salt            => $salt,
+                password        => $password,
                 first_name      => $first_name,
                 last_name       => $last_name,
                 register_date   => join (' ', $dt->ymd, $dt->hms),

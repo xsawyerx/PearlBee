@@ -3,7 +3,6 @@ use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Auth::Tiny;
 
-use PearlBee::Password;
 use PearlBee::Dashboard::Posts;
 use PearlBee::Dashboard::Users;
 use PearlBee::Dashboard::Categories;
@@ -41,10 +40,8 @@ prefix '/dashboard' => sub {
                 warning => 'The passwords don\'t match!'
             } => { layout => 'admin' };
 
-        my $password_hash = generate_hash($password1);
         $user->update({
-            password => $password_hash->{'hash'},
-            salt     => $password_hash->{'salt'},
+            password => $password1,
             status   => 'activated',
         });
 
@@ -77,8 +74,7 @@ prefix '/dashboard' => sub {
         ), qw<first_name last_name email>;
 
         if ( $old_password && $new_password && $new_password2 ) {
-            my $generated_password = generate_hash($old_password, $user->salt);
-            $generated_password->{'hash'} eq $user->password
+            $user->check_password($old_password)
                 or return template 'admin/profile' => {
                     user    => $user,
                     warning => 'Incorrect old password!',
@@ -91,9 +87,7 @@ prefix '/dashboard' => sub {
                     warning => 'The new passwords don\'t match!',
                 } => { layout => 'admin' };
 
-            $generated_password = generate_hash($new_password);
-            $update_parameters{'password'} = $generated_password->{'hash'};
-            $update_parameters{'salt'}     = $generated_password->{'salt'};
+            $update_parameters{'password'} = $new_password;
         } elsif ( $old_password || $new_password || $new_password2 ) {
             return template 'admin/profile' => {
                 user    => $user,
