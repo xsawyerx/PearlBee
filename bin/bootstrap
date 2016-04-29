@@ -5,6 +5,16 @@ pushd "$script_dir/../" > /dev/null
 project_dir=$(pwd -P)
 popd > /dev/null
 local_lib="$project_dir/local"
+self_contained=false
+remove=false
+
+while getopts sr o
+do
+    case "$o" in
+        s)  self_contained=true;;
+        r)  remove=true;;
+    esac
+done
 
 function ensure_we_have_cpanm_ll() {
     attempt=$1
@@ -27,7 +37,13 @@ function install_dependencies() {
     echo 'installing dependencies'
     # local lib variables already exported at this point, so it installs to
     # $local_lib
-    cpanm --installdeps $project_dir
+    if [[ "$self_contained" = true || $OSTYPE == darwin* ]]; then
+        echo "installing self-contained since we're running on Mac OS X"
+        echo "it'll take a while... go make some coffee :)"
+        cpanm --self-contained --installdeps $project_dir
+    else
+        cpanm --installdeps $project_dir
+    fi;
 }
 
 function install_database() {
@@ -37,6 +53,15 @@ function install_database() {
     perl $script_dir/load-initial-data "dbi:SQLite:dbname=$project_dir/db.sqlite"
 }
 
+function remove_previous_install() {
+    if [[ "$remove" = true && -d $local_lib && $local_lib == *local ]]; then
+        echo 'it seems we already have a previous installation in local'
+        echo "let's start off clean"
+        rm -rfv $local_lib
+    fi
+}
+
+remove_previous_install;
 ensure_we_have_cpanm_ll;
 install_dependencies;
 install_database;
