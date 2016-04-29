@@ -13,7 +13,7 @@ use PearlBee::Model::Schema;
 
 our @EXPORT = qw/ app mech schema logs /;
 
-PearlBee::set(logger => 'capture');
+PearlBee::set( logger => 'capture' );
 
 sub import {
     my ($caller) = @_;
@@ -24,7 +24,7 @@ sub import {
 
 sub mech {
     my $mech = Test::WWW::Mechanize::PSGI->new( app => PearlBee->to_app );
-    $mech->cookie_jar(HTTP::Cookies->new);
+    $mech->cookie_jar( HTTP::Cookies->new );
     return $mech;
 }
 
@@ -34,11 +34,8 @@ sub logs { app->logger_engine->trapper->read }
 
 sub schema {
     my $config = PearlBee::config->{plugins}{DBIC}{default};
-    return PearlBee::Model::Schema->connect(
-        $config->{dsn},
-        $config->{user},
-        $config->{password}
-    );
+    return PearlBee::Model::Schema->connect( $config->{dsn}, $config->{user},
+        $config->{password} );
 }
 
 1;

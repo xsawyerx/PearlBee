@@ -3,7 +3,7 @@ use Dancer2 appname => 'PearlBee';
 
 my $captcha;
 
-if (config->{'captcha_enabled'}) {
+if ( config->{'captcha_enabled'} ) {
     require Authen::Captcha;
     $captcha = Authen::Captcha->new(
         data_folder   => config->{'captcha_folder'},
@@ -12,11 +12,11 @@ if (config->{'captcha_enabled'}) {
 }
 
 sub new_captcha_code {
-    return 1 if ! config->{'captcha_enabled'};
+    return 1 if !config->{'captcha_enabled'};
 
     my $code = $captcha->generate_code(5);
 
-    session secret  => $code;
+    session secret => $code;
 
     # this is a hack because Google Chrome triggers GET 2 times, and it messes up the valid captcha code
     session secrets => [] unless session('secrets');
@@ -26,7 +26,7 @@ sub new_captcha_code {
 }
 
 sub check_captcha_code {
-    return 1 if ! config->{'captcha_enabled'};
+    return 1 if !config->{'captcha_enabled'};
 
     my $code = shift;
 

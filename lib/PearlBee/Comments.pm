@@ -14,7 +14,7 @@ my $config = config->{'comments_engines'}{$name} || {};
 $config->{'_app_config'} = config;
 $config->{'template'}    = app->template_engine;
 
-my $Engine = $component_class->new( $config );
+my $Engine = $component_class->new($config);
 
 if ( !$Engine->does('PearlBee::Role::CommentsEngine') ) {
     croak "Engine $name does not use role CommentsEngine";

@@ -6,13 +6,14 @@ use PearlBee::Helpers::Util qw/string_to_slug/;
 
 prefix '/dashboard/categories' => sub {
     get '/?' => needs_permission view_category => sub {
-        my @categories = resultset('Category')->search({
-            name => { '!=' => 'Uncategorized'}
-        });
+        my @categories = resultset('Category')->search(
+            {
+                name => { '!=' => 'Uncategorized' }
+            }
+        );
 
-        template '/admin/categories/list' => {
-            categories => \@categories,
-        } => { layout => 'admin' };
+        template '/admin/categories/list' =>
+            { categories => \@categories, } => { layout => 'admin' };
     };
 
     post '/add' => needs_permission create_category => sub {
@@ -20,34 +21,41 @@ prefix '/dashboard/categories' => sub {
         my $slug   = string_to_slug( body_parameters->{'slug'} );
         my $params = {};
 
-        my $found_slug_or_name = resultset('Category')->search({
-            -or => [ slug => $slug, name => $name ]
-        })->first;
+        my $found_slug_or_name = resultset('Category')->search(
+            {
+                -or => [ slug => $slug, name => $name ]
+            }
+        )->first;
 
         # FIXME: when we have a proper notification system,
         #        this should actually redirect to /dashboard/categories
         #        with the warning
         $found_slug_or_name
             and return template '/admin/categories/list' => {
-                categories => [
-                    resultset('Category')->search({
+            categories => [
+                resultset('Category')->search(
+                    {
                         name => { '!=' => 'Uncategorized' }
-                    })
-                ],
+                    }
+                )
+            ],
 
-                warning => 'The category name or slug already exists',
+            warning => 'The category name or slug already exists',
             };
 
         eval {
             my $user     = var('user');
-            my $category = resultset('Category')->create({
-                name    => $name,
-                slug    => $slug,
-                user_id => $user->id,
-            });
+            my $category = resultset('Category')->create(
+                {
+                    name    => $name,
+                    slug    => $slug,
+                    user_id => $user->id,
+                }
+            );
 
             1;
         } or do {
+
             # FIXME: GH#9
             my $error = $@ || 'Zombie error';
             error $error;
@@ -57,9 +65,11 @@ prefix '/dashboard/categories' => sub {
         template '/admin/categories/list' => {
             success    => 'The cateogry was successfully added.',
             categories => [
-                resultset('Category')->search({
-                    name => { '!=' => 'Uncategorized' }
-                }),
+                resultset('Category')->search(
+                    {
+                        name => { '!=' => 'Uncategorized' }
+                    }
+                ),
             ],
         } => { layout => 'admin' };
     };
@@ -68,20 +78,23 @@ prefix '/dashboard/categories' => sub {
         my $id = route_parameters->{'id'};
 
         eval {
-            my $category = resultset('Category')->find( $id );
+            my $category = resultset('Category')->find($id);
             $category->safe_cascade_delete();
 
             1;
         } or do {
+
             # FIXME: GH#9
             my $error = $@ || 'Zombie error';
             error $error;
             return template '/admin/categories/list' => {
                 warning    => 'Something went wrong.',
                 categories => [
-                    resultset('Category')->search({
-                        name => { '!=' => 'Uncategorized' }
-                    })
+                    resultset('Category')->search(
+                        {
+                            name => { '!=' => 'Uncategorized' }
+                        }
+                    )
                 ],
             } => { layout => 'admin' };
         };
@@ -95,9 +108,11 @@ prefix '/dashboard/categories' => sub {
         template '/admin/categories/list' => {
             category   => resultset('Category')->find($category_id),
             categories => [
-                resultset('Category')->search({
-                    name => { '!=' => 'Uncategorized' }
-                })
+                resultset('Category')->search(
+                    {
+                        name => { '!=' => 'Uncategorized' }
+                    }
+                )
             ],
         } => { layout => 'admin' };
     };
@@ -109,38 +124,50 @@ prefix '/dashboard/categories' => sub {
 
         my $params     = {};
         my $slug       = string_to_slug( body_parameters->{'slug'} );
-        my $found_slug = resultset('Category')->search({
-            id   => { '!=' => $category_id },
-            slug => $slug,
-        })->first and $params->{'warning'} = 'The category slug already exists';
+        my $found_slug = resultset('Category')->search(
+            {
+                id   => { '!=' => $category_id },
+                slug => $slug,
+            }
+            )->first
+            and $params->{'warning'} = 'The category slug already exists';
 
-        my $found_name = resultset('Category')->search({
-            id   => { '!=' => $category_id },
-            name => $name,
-        })->first and $params->{'warning'} = 'The category name already exists';
-
-        $params->{'warning'} or eval {
-            $category->update({
+        my $found_name = resultset('Category')->search(
+            {
+                id   => { '!=' => $category_id },
                 name => $name,
-                slug => $slug
-            });
+            }
+            )->first
+            and $params->{'warning'} = 'The category name already exists';
+
+        $params->{'warning'}
+            or eval {
+            $category->update(
+                {
+                    name => $name,
+                    slug => $slug
+                }
+            );
 
             $params->{'success'} = 'The category was updated successfully';
 
             1;
-        } or do {
+            } or do {
+
             # FIXME: GH#9
             my $error = $@ || 'Zombie error';
             error $error;
             redirect '/dashboard/categories';
-        };
+            };
 
         template '/admin/categories/list' => {
             category   => $category,
             categories => [
-                resultset('Category')->search({
-                    name => { '!=' => 'Uncategorized' }
-                }),
+                resultset('Category')->search(
+                    {
+                        name => { '!=' => 'Uncategorized' }
+                    }
+                ),
             ],
         } => { layout => 'admin' };
     };

@@ -1,4 +1,5 @@
 use utf8;
+
 package PearlBee::Model::Schema::Result::User;
 
 # Created by DBIx::Class::Schema::Loader
@@ -103,53 +104,55 @@ __PACKAGE__->load_components(qw/EncodedColumn Core/);
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "first_name",
-  { data_type => "varchar", is_nullable => 0, size => 255 },
-  "last_name",
-  { data_type => "varchar", is_nullable => 0, size => 255 },
-  "username",
-  { data_type => "varchar", is_nullable => 0, size => 200 },
-  "password",
-  {
-    data_type           => "char",
-    is_nullable         => 0,
-    size                => 59,
-    encode_column       => 1,
-    encode_class        => 'Crypt::Eksblowfish::Bcrypt',
-    encode_args         => { key_nul => 0, cost => 8 },
-    encode_check_method => 'check_password',
-  },
-  "register_date",
-  {
-    data_type => "timestamp",
-    datetime_undef_if_invalid => 1,
-    default_value => \"current_timestamp",
-    is_nullable => 0,
-  },
-  "email",
-  { data_type => "varchar", is_nullable => 0, size => 255 },
-  "company",
-  { data_type => "varchar", is_nullable => 1, size => 255 },
-  "telephone",
-  { data_type => "varchar", is_nullable => 1, size => 12 },
-  "role",
-  {
-    data_type => "enum",
-    default_value => "author",
-    extra => { list => ["author", "admin"] },
-    is_nullable => 0,
-  },
-  "activation_key",
-  { data_type => "varchar", is_nullable => 1, size => 100 },
-  "status",
-  {
-    data_type => "enum",
-    default_value => "deactivated",
-    extra => { list => ["deactivated", "activated", "suspended", "pending"] },
-    is_nullable => 0,
-  },
+    "id",
+    { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+    "first_name",
+    { data_type => "varchar", is_nullable => 0, size => 255 },
+    "last_name",
+    { data_type => "varchar", is_nullable => 0, size => 255 },
+    "username",
+    { data_type => "varchar", is_nullable => 0, size => 200 },
+    "password",
+    {
+        data_type           => "char",
+        is_nullable         => 0,
+        size                => 59,
+        encode_column       => 1,
+        encode_class        => 'Crypt::Eksblowfish::Bcrypt',
+        encode_args         => { key_nul => 0, cost => 8 },
+        encode_check_method => 'check_password',
+    },
+    "register_date",
+    {
+        data_type                 => "timestamp",
+        datetime_undef_if_invalid => 1,
+        default_value             => \"current_timestamp",
+        is_nullable               => 0,
+    },
+    "email",
+    { data_type => "varchar", is_nullable => 0, size => 255 },
+    "company",
+    { data_type => "varchar", is_nullable => 1, size => 255 },
+    "telephone",
+    { data_type => "varchar", is_nullable => 1, size => 12 },
+    "role",
+    {
+        data_type     => "enum",
+        default_value => "author",
+        extra         => { list => [ "author", "admin" ] },
+        is_nullable   => 0,
+    },
+    "activation_key",
+    { data_type => "varchar", is_nullable => 1, size => 100 },
+    "status",
+    {
+        data_type     => "enum",
+        default_value => "deactivated",
+        extra         => {
+            list => [ "deactivated", "activated", "suspended", "pending" ]
+        },
+        is_nullable => 0,
+    },
 );
 
 =head1 PRIMARY KEY
@@ -176,7 +179,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint("email", ["email"]);
+__PACKAGE__->add_unique_constraint( "email", ["email"] );
 
 =head2 C<username>
 
@@ -188,7 +191,7 @@ __PACKAGE__->add_unique_constraint("email", ["email"]);
 
 =cut
 
-__PACKAGE__->add_unique_constraint("username", ["username"]);
+__PACKAGE__->add_unique_constraint( "username", ["username"] );
 
 =head1 RELATIONS
 
@@ -201,10 +204,10 @@ Related object: L<PearlBee::Model::Schema::Result::Category>
 =cut
 
 __PACKAGE__->has_many(
-  "categories",
-  "PearlBee::Model::Schema::Result::Category",
-  { "foreign.user_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "categories",
+    "PearlBee::Model::Schema::Result::Category",
+    { "foreign.user_id" => "self.id" },
+    { cascade_copy      => 0, cascade_delete => 0 },
 );
 
 =head2 comments
@@ -216,10 +219,10 @@ Related object: L<PearlBee::Model::Schema::Result::Comment>
 =cut
 
 __PACKAGE__->has_many(
-  "comments",
-  "PearlBee::Model::Schema::Result::Comment",
-  { "foreign.uid" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "comments",
+    "PearlBee::Model::Schema::Result::Comment",
+    { "foreign.uid" => "self.id" },
+    { cascade_copy  => 0, cascade_delete => 0 },
 );
 
 =head2 posts
@@ -231,18 +234,17 @@ Related object: L<PearlBee::Model::Schema::Result::Post>
 =cut
 
 __PACKAGE__->has_many(
-  "posts",
-  "PearlBee::Model::Schema::Result::Post",
-  { "foreign.user_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "posts",
+    "PearlBee::Model::Schema::Result::Post",
+    { "foreign.user_id" => "self.id" },
+    { cascade_copy      => 0, cascade_delete => 0 },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-03-12 11:32:06
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:K9HSB67oau0IzWdJILumFg
 
-
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+
 =head
 
 Check if the user has administration authority
@@ -250,11 +252,11 @@ Check if the user has administration authority
 =cut
 
 sub is_admin {
-  my ($self) = shift;
+    my ($self) = shift;
 
-  return 1 if ( $self->role eq 'admin' );
+    return 1 if ( $self->role eq 'admin' );
 
-  return 0;
+    return 0;
 }
 
 =head
@@ -264,11 +266,11 @@ Check if the user has author authority
 =cut
 
 sub is_author {
-  my ($self) = shift;
+    my ($self) = shift;
 
-  return 1 if ( $self->role eq 'author' );
+    return 1 if ( $self->role eq 'author' );
 
-  return 0;
+    return 0;
 }
 
 =head
@@ -278,11 +280,11 @@ Check if the user is active
 =cut
 
 sub is_active {
-  my ($self) = shift;
+    my ($self) = shift;
 
-  return 1 if ( $self->role eq 'activated' );
+    return 1 if ( $self->role eq 'activated' );
 
-  return 0;
+    return 0;
 }
 
 =head
@@ -292,11 +294,11 @@ Check if the user is deactivated
 =cut
 
 sub is_deactive {
-  my ($self) = shift;
+    my ($self) = shift;
 
-  return 1 if ( $self->role eq 'deactivated' );
+    return 1 if ( $self->role eq 'deactivated' );
 
-  return 0;
+    return 0;
 }
 
 =head
@@ -306,33 +308,35 @@ Status changes
 =cut
 
 sub deactivate {
-  my $self = shift;
+    my $self = shift;
 
-  $self->update({ status => 'deactivated' });
+    $self->update( { status => 'deactivated' } );
 }
 
 sub activate {
-  my $self = shift;
+    my $self = shift;
 
-  $self->update({ status => 'activated' });
+    $self->update( { status => 'activated' } );
 }
 
 sub suspend {
-  my $self = shift;
+    my $self = shift;
 
-  $self->update({ status => 'suspended' });
+    $self->update( { status => 'suspended' } );
 }
 
 sub allow {
-  my $self = shift;
-  
-  # set a password for the user
-  
-  # welcome the user in an email
+    my $self = shift;
 
-  $self->update({ status => 'deactivated' });
+    # set a password for the user
+
+    # welcome the user in an email
+
+    $self->update( { status => 'deactivated' } );
 }
 
-sub uri { '/posts/user/' . $_[0]->username . ( $PearlBee::is_static && '.html ' ) }
+sub uri {
+    '/posts/user/' . $_[0]->username . ( $PearlBee::is_static && '.html ' );
+}
 
 1;

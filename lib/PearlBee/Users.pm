@@ -1,4 +1,5 @@
 package PearlBee::Users;
+
 # ABSTRACT: User-related paths
 use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
@@ -26,10 +27,8 @@ post '/sign-up' => sub {
         my $warning = shift;
         error "Error in sign-up attempt: $warning";
         PearlBee::Helpers::Captcha::new_captcha_code();
-        return template signup => {
-            %{$template_params},
-            warning => $warning,
-        };
+        return template signup =>
+            { %{$template_params}, warning => $warning, };
     };
 
     my $username = $params->{'username'}
@@ -42,10 +41,10 @@ post '/sign-up' => sub {
         or return $failed_login->('Invalid secret code.');
 
     eval {
-        resultset('User')->search({ email => $email })->first
+        resultset('User')->search( { email => $email } )->first
             and die "Email address already in use.\n";
 
-        resultset('User')->search({ username => $username })->first
+        resultset('User')->search( { username => $username } )->first
             and die "Username already in use.\n";
 
         # Create the user
@@ -57,22 +56,26 @@ post '/sign-up' => sub {
 
         my $password = random_string('Ccc!cCn');
 
-        resultset('User')->create({
-            username      => $username,
-            password      => $password,
-            email         => $email,
-            first_name    => $params->{'first_name'},
-            last_name     => $params->{'last_name'},
-            register_date => join (' ', $dt->ymd, $dt->hms),
-            role          => 'author',
-            status        => 'pending'
-        });
+        resultset('User')->create(
+            {
+                username      => $username,
+                password      => $password,
+                email         => $email,
+                first_name    => $params->{'first_name'},
+                last_name     => $params->{'last_name'},
+                register_date => join( ' ', $dt->ymd, $dt->hms ),
+                role          => 'author',
+                status        => 'pending'
+            }
+        );
 
         # Notify the author that a new comment was submited
-        my $first_admin = resultset('User')->search({
-            role   => 'admin',
-            status => 'activated',
-        })->first;
+        my $first_admin = resultset('User')->search(
+            {
+                role   => 'admin',
+                status => 'activated',
+            }
+        )->first;
 
         my $email_template = config->{'email_templates'} . 'new_user.tt';
         Email::Template->send(
@@ -98,33 +101,37 @@ post '/sign-up' => sub {
         return $failed_login->( $@ || 'Unknown error' );
     };
 
-    template notify => {
-        success => 'The user was created and it is waiting for admin approval.'
-    };
+    template notify => { success =>
+            'The user was created and it is waiting for admin approval.' };
 };
 
 get '/login' => sub {
+
     # if registered, just display the dashboard
     my $failure = query_parameters->{'failure'};
-    $failure and return template login => {
-        warning => $failure,
-    }, { layout => 'admin' };
+    $failure and return template
+        login => { warning => $failure, },
+        { layout => 'admin' };
 
     session('user_id') and redirect '/dashboard';
-    template login => {}, { layout => 'admin' };
+    template
+        login => {},
+        { layout => 'admin' };
 };
 
 post '/login' => sub {
     my $password = params->{password};
     my $username = params->{username};
 
-    my $user = resultset('User')->find({
-        username => $username,
-        -or      => [
-            status => 'activated',
-            status => 'deactivated'
-        ]
-    }) or redirect '/login?failed=1';
+    my $user = resultset('User')->find(
+        {
+            username => $username,
+            -or      => [
+                status => 'activated',
+                status => 'deactivated'
+            ]
+        }
+    ) or redirect '/login?failed=1';
 
     $user->check_password($password)
         or redirect '/login?failed=1';

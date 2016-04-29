@@ -1,4 +1,5 @@
 use utf8;
+
 package PearlBee::Model::Schema::Result::Category;
 
 # Created by DBIx::Class::Schema::Loader
@@ -50,14 +51,14 @@ __PACKAGE__->table("category");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "name",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
-  "slug",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
-  "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "id",
+    { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+    "name",
+    { data_type => "varchar", is_nullable => 0, size => 100 },
+    "slug",
+    { data_type => "varchar", is_nullable => 0, size => 100 },
+    "user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -84,7 +85,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint("name", ["name"]);
+__PACKAGE__->add_unique_constraint( "name", ["name"] );
 
 =head1 RELATIONS
 
@@ -97,10 +98,10 @@ Related object: L<PearlBee::Model::Schema::Result::PostCategory>
 =cut
 
 __PACKAGE__->has_many(
-  "post_categories",
-  "PearlBee::Model::Schema::Result::PostCategory",
-  { "foreign.category_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "post_categories",
+    "PearlBee::Model::Schema::Result::PostCategory",
+    { "foreign.category_id" => "self.id" },
+    { cascade_copy          => 0, cascade_delete => 0 },
 );
 
 =head2 user
@@ -112,10 +113,10 @@ Related object: L<PearlBee::Model::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "user",
-  "PearlBee::Model::Schema::Result::User",
-  { id => "user_id" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+    "user",
+    "PearlBee::Model::Schema::Result::User",
+    { id            => "user_id" },
+    { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 posts
@@ -126,12 +127,10 @@ Composing rels: L</post_categories> -> post
 
 =cut
 
-__PACKAGE__->many_to_many("posts", "post_categories", "post");
-
+__PACKAGE__->many_to_many( "posts", "post_categories", "post" );
 
 # Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-23 16:54:04
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YAIOlaZq+2QRt62utRmEoA
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 
@@ -142,28 +141,32 @@ Safely cascade delete a category
 =cut
 
 sub safe_cascade_delete {
-  my $self = shift;
+    my $self = shift;
 
-  my $schema = $self->result_source->schema;
-  
-  foreach ( $self->post_categories ) {
-      my $post = $_->post;
-      my @post_categories = $post->post_categories;
+    my $schema = $self->result_source->schema;
 
-      if ( scalar ( @post_categories ) == 1 ) {
-        $schema->resultset('PostCategory')->create({
-            post_id => $post->id,
-            category_id => '1'
-          });
-      }
+    foreach ( $self->post_categories ) {
+        my $post            = $_->post;
+        my @post_categories = $post->post_categories;
 
-      $_->delete();
+        if ( scalar(@post_categories) == 1 ) {
+            $schema->resultset('PostCategory')->create(
+                {
+                    post_id     => $post->id,
+                    category_id => '1'
+                }
+            );
+        }
+
+        $_->delete();
     }
 
     $self->delete();
 }
 
-sub uri { '/posts/category/' . $_[0]->slug . ( $PearlBee::is_static && '.html ' ) }
+sub uri {
+    '/posts/category/' . $_[0]->slug . ( $PearlBee::is_static && '.html ' );
+}
 
 sub edit_uri { '/dashboard/categories/edit/' . $_[0]->id }
 

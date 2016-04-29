@@ -25,6 +25,7 @@ sub change_user_state {
         $user->$state();
         1;
     } or do {
+
         # FIXME: don't just report the error, show the user as well
         #        GH#9
         my $error = $@ || 'Zombie error';
@@ -36,9 +37,9 @@ sub change_user_state {
 
 prefix '/dashboard/users' => sub {
     get '/?' => needs_permission view_user => sub {
-        my $page        = query_parameters->{'page'} || 1;
-        my $status      = query_parameters->{'status'};
-        my $nr_of_rows  = 5;
+        my $page       = query_parameters->{'page'} || 1;
+        my $status     = query_parameters->{'status'};
+        my $nr_of_rows = 5;
 
         my $search_parameters = {};
 
@@ -58,17 +59,19 @@ prefix '/dashboard/users' => sub {
             page     => $page,
         };
 
-        my @users = resultset('User')->search( $search_parameters, $search_options );
+        my @users = resultset('User')
+            ->search( $search_parameters, $search_options );
         my $count = resultset('View::Count::StatusUser')->first;
 
-        my ($all, $activated, $deactivated, $suspended, $pending) = $count->get_all_status_counts;
+        my ( $all, $activated, $deactivated, $suspended, $pending )
+            = $count->get_all_status_counts;
 
         # we also want to change the count of total users
         # and if it's not multiuser, we remove pending users from the count
-        if ( ! config->{'multiuser'} ) {
-            my $num_pending_users = resultset('User')->search(
-                { status => 'pending' },
-            )->count;
+        if ( !config->{'multiuser'} ) {
+            my $num_pending_users
+                = resultset('User')->search( { status => 'pending' }, )
+                ->count;
 
             $all -= $num_pending_users;
         }
@@ -82,15 +85,18 @@ prefix '/dashboard/users' => sub {
         my $action_url = '/dashboard/users?status=' . uri_escape($status);
 
         # Calculate the next and previous page link
-        my $total_pages                 = get_total_pages($all, $nr_of_rows);
-        my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, $action_url);
+        my $total_pages = get_total_pages( $all, $nr_of_rows );
+        my ( $previous_link, $next_link )
+            = get_previous_next_link( $page, $total_pages, $action_url );
 
         # Generating the pagination navigation
-        my $total_users     = $all;
-        my $posts_per_page  = $nr_of_rows;
-        my $current_page    = $page;
-        my $pages_per_set   = 7;
-        my $pagination      = generate_pagination_numbering($total_users, $posts_per_page, $current_page, $pages_per_set);
+        my $total_users    = $all;
+        my $posts_per_page = $nr_of_rows;
+        my $current_page   = $page;
+        my $pages_per_set  = 7;
+        my $pagination
+            = generate_pagination_numbering( $total_users, $posts_per_page,
+            $current_page, $pages_per_set );
 
         template '/admin/users/list' => {
             users         => \@users,
@@ -109,10 +115,8 @@ prefix '/dashboard/users' => sub {
 
     foreach my $state (qw<activate deactivate suspend>) {
         get "/$state/:id" => needs_permission update_user => sub {
-            my $new_url = change_user_state(
-                route_parameters->{'id'},
-                $state,
-            );
+            my $new_url
+                = change_user_state( route_parameters->{'id'}, $state, );
 
             redirect $new_url;
         };
@@ -121,12 +125,12 @@ prefix '/dashboard/users' => sub {
     # approve pending users (FIXME: rename to "approve"?)
     get '/allow/:id' => needs_permission allow_user => sub {
         my $user_id = route_parameters->{'id'};
-        my $user    = resultset('User')->find( $user_id )
+        my $user    = resultset('User')->find($user_id)
             or redirect config->{'app_url'} . '/dashboard/users';
 
         eval {
             my $password = random_string('Ccc!cCn');
-            $user->update({ password => $password });
+            $user->update( { password => $password } );
             $user->allow();
 
             Email::Template->send(
@@ -137,19 +141,20 @@ prefix '/dashboard/users' => sub {
                     Subject => config->{'welcome_email_subject'},
 
                     tt_vars => {
-                        role        => $user->role,
-                        username    => $user->username,
-                        password    => $password,
-                        first_name  => $user->first_name,
-                        app_url     => config->{'app_url'},
-                        blog_name   => config->{'blog_name'},
-                        signature   => config->{'email_signature'},
-                        allowed     => 1,
+                        role       => $user->role,
+                        username   => $user->username,
+                        password   => $password,
+                        first_name => $user->first_name,
+                        app_url    => config->{'app_url'},
+                        blog_name  => config->{'blog_name'},
+                        signature  => config->{'email_signature'},
+                        allowed    => 1,
                     },
                 }
             ) or error 'Could not send the email'; # FIXME GH#9
             1;
         } or do {
+
             # FIXME: ugh GH#9
             my $error = $@ || 'Zombie error';
             error $error;
@@ -158,9 +163,8 @@ prefix '/dashboard/users' => sub {
         redirect config->{'app_url'} . '/dashboard/users';
     };
 
-
     get '/add' => sub {
-        template 'admin/users/add', {},  { layout => 'admin' };
+        template 'admin/users/add', {}, { layout => 'admin' };
     };
 
     post '/add' => sub {
@@ -178,15 +182,17 @@ prefix '/dashboard/users' => sub {
             my $last_name  = $params->{'last_name'};
             my $role       = $params->{'role'};
 
-            resultset('User')->create({
-                username        => $username,
-                password        => $password,
-                first_name      => $first_name,
-                last_name       => $last_name,
-                register_date   => join (' ', $dt->ymd, $dt->hms),
-                role            => $role,
-                email           => $email,
-            });
+            resultset('User')->create(
+                {
+                    username      => $username,
+                    password      => $password,
+                    first_name    => $first_name,
+                    last_name     => $last_name,
+                    register_date => join( ' ', $dt->ymd, $dt->hms ),
+                    role          => $role,
+                    email         => $email,
+                }
+            );
 
             Email::Template->send(
                 config->{'email_templates'} . 'welcome.tt',
@@ -196,13 +202,13 @@ prefix '/dashboard/users' => sub {
                     Subject => config->{'welcome_email_subject'},
 
                     tt_vars => {
-                        role        => $role,
-                        username    => $username,
-                        password    => $password,
-                        first_name  => $first_name,
-                        app_url     => config->{'app_url'},
-                        blog_name   => config->{'blog_name'},
-                        signature   => config->{'email_signature'},
+                        role       => $role,
+                        username   => $username,
+                        password   => $password,
+                        first_name => $first_name,
+                        app_url    => config->{'app_url'},
+                        blog_name  => config->{'blog_name'},
+                        signature  => config->{'email_signature'},
                     },
                 }
             ) or error "Could not send the email";
@@ -211,13 +217,13 @@ prefix '/dashboard/users' => sub {
         } or do {
             my $error = $@ || 'Zombie error';
             error $error; # FIXME GH#9
-            return template 'admin/users/add' => {
-                warning => 'Something went wrong. Please contact the administrator.'
+            return template 'admin/users/add' => { warning =>
+                    'Something went wrong. Please contact the administrator.'
             } => { layout => 'admin' };
         };
 
-        template 'admin/users/add' => {
-            success => 'The user was added succesfully and will be activated after he logs in.'
+        template 'admin/users/add' => { success =>
+                'The user was added succesfully and will be activated after he logs in.'
         } => { layout => 'admin' };
     };
 };

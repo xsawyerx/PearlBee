@@ -11,7 +11,7 @@ __PACKAGE__->table('tag');
 __PACKAGE__->result_source_instance->is_virtual(1);
 
 __PACKAGE__->result_source_instance->view_definition(
-  q[
+    q[
     SELECT
       P.id AS id, COUNT(P.title) AS comments, P.title AS title, P.description AS description, P.slug AS slug
     FROM
@@ -30,16 +30,16 @@ __PACKAGE__->result_source_instance->view_definition(
 );
 
 __PACKAGE__->add_columns(
-  "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "comments",
-  { data_type => "integer", is_nullable => 0 },
-  "title",
-  { data_type => "varchar", is_nullable => 0, size => 200 },
-  "description",
-  { data_type => "varchar", is_nullable => 0, size => 200 },
-  "slug",
-  { data_type => "varchar", is_nullable => 0, size => 255 },
+    "id",
+    { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+    "comments",
+    { data_type => "integer", is_nullable => 0 },
+    "title",
+    { data_type => "varchar", is_nullable => 0, size => 200 },
+    "description",
+    { data_type => "varchar", is_nullable => 0, size => 200 },
+    "slug",
+    { data_type => "varchar", is_nullable => 0, size => 255 },
 );
 
 __PACKAGE__->set_primary_key("id");

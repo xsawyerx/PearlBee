@@ -22,46 +22,46 @@ prefix '/dashboard' => sub {
     };
 
     post '' => needs login => sub {
-        my $user = resultset('User')->search({
-            id => session('user_id'),
-        });
+        my $user = resultset('User')->search(
+            {
+                id => session('user_id'),
+            }
+        );
 
         $user->status eq 'deactivated'
-            or template 'admin/index'
-                 => { user   => $user   }
-                 => { layout => 'admin' };
+            or template 'admin/index' => { user => $user } =>
+            { layout => 'admin' };
 
         my $password1 = body_parameters->{'password1'};
         my $password2 = body_parameters->{'password2'};
 
         $password1 eq $password2
             or return template 'admin/index' => {
-                user    => $user,
-                warning => 'The passwords don\'t match!'
+            user    => $user,
+            warning => 'The passwords don\'t match!'
             } => { layout => 'admin' };
 
-        $user->update({
-            password => $password1,
-            status   => 'activated',
-        });
+        $user->update(
+            {
+                password => $password1,
+                status   => 'activated',
+            }
+        );
 
-        template 'admin/index' => {
-            user => $user
-        } => { layout => 'admin' };
+        template 'admin/index' => { user => $user } => { layout => 'admin' };
     };
 
     get '/profile' => needs login => sub {
         my $user = resultset('User')->from_session( session('user_id') )
             or redirect '/';
 
-        template 'admin/profile' => {
-            user => $user
-        } => { layout => 'admin' };
+        template 'admin/profile' => { user => $user } =>
+            { layout => 'admin' };
     };
 
     post '/edit' => needs login => sub {
-        my $user          = resultset('User')->from_session( session('user_id') );
-        my $params        = body_parameters;
+        my $user   = resultset('User')->from_session( session('user_id') );
+        my $params = body_parameters;
         my $first_name    = $params->{'first_name'};
         my $last_name     = $params->{'last_name'};
         my $email         = $params->{'email'};
@@ -69,22 +69,20 @@ prefix '/dashboard' => sub {
         my $new_password  = delete $params->{'new_password'};
         my $new_password2 = delete $params->{'new_password2'};
 
-        my %update_parameters = map +(
-            $_ => $params->{$_}
-        ), qw<first_name last_name email>;
+        my %update_parameters = map +( $_ => $params->{$_} ),
+            qw<first_name last_name email>;
 
         if ( $old_password && $new_password && $new_password2 ) {
             $user->check_password($old_password)
                 or return template 'admin/profile' => {
-                    user    => $user,
-                    warning => 'Incorrect old password!',
+                user    => $user,
+                warning => 'Incorrect old password!',
                 } => { layout => 'admin' };
-
 
             $new_password eq $new_password2
                 or return template 'admin/profile' => {
-                    user    => $user,
-                    warning => 'The new passwords don\'t match!',
+                user    => $user,
+                warning => 'The new passwords don\'t match!',
                 } => { layout => 'admin' };
 
             $update_parameters{'password'} = $new_password;
@@ -95,7 +93,7 @@ prefix '/dashboard' => sub {
             } => { layout => 'admin' };
         }
 
-        $user->update(\%update_parameters);
+        $user->update( \%update_parameters );
 
         return template 'admin/profile' => {
             user    => $user,

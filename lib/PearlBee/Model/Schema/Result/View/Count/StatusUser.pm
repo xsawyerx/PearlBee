@@ -24,28 +24,30 @@ __PACKAGE__->result_source_instance->view_definition(
 );
 
 __PACKAGE__->add_columns(
-  "deactivated",
-  { data_type => "integer", is_nullable => 0 },
-  "activated",
-  { data_type => "integer", is_nullable => 0 },
-  "suspended",
-  { data_type => "integer", is_nullable => 0 },
-  "pending",
-  { data_type => "integer", is_nullable => 0 },
-  "total",
-  { data_type => "integer", is_nullable => 0 },
+    "deactivated", { data_type => "integer", is_nullable => 0 },
+    "activated",   { data_type => "integer", is_nullable => 0 },
+    "suspended",   { data_type => "integer", is_nullable => 0 },
+    "pending",     { data_type => "integer", is_nullable => 0 },
+    "total",       { data_type => "integer", is_nullable => 0 },
 );
 
 sub get_all_status_counts {
-  my $self = shift;
+    my $self = shift;
 
-  return ( $self->total, $self->activated, $self->deactivated, $self->suspended, $self->pending );
+    return (
+        $self->total,     $self->activated, $self->deactivated,
+        $self->suspended, $self->pending
+    );
 }
 
 sub get_status_count {
-  my ($self, $status) = @_;
+    my ( $self, $status ) = @_;
 
-  return ( $status eq 'activated' ) ? $self->activated : ( $status eq 'deactivated' ) ? $self->deactivated : ( $status eq 'suspended' ) ? $self->suspended : $self->pending;
+    return
+          ( $status eq 'activated' )   ? $self->activated
+        : ( $status eq 'deactivated' ) ? $self->deactivated
+        : ( $status eq 'suspended' )   ? $self->suspended
+        :                                $self->pending;
 }
 
 1;

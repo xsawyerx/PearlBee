@@ -1,4 +1,5 @@
 package PearlBee::Tags;
+
 # ABSTRACT: Tags-related paths
 use Dancer2 appname => 'PearlBee';
 

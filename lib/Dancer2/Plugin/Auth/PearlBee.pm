@@ -7,9 +7,9 @@ use URI::Escape;
 
 register needs_permission => sub {
     my ( $dsl, $permission, $sub ) = plugin_args(@_);
-    my $rbac = $dsl->config->{'rbac'};
+    my $rbac          = $dsl->config->{'rbac'};
     my $error_message = uri_escape( $rbac->{'error_message'} )
-                     || "You do not have permission ($permission) to access the page";
+        || "You do not have permission ($permission) to access the page";
 
     return sub {
         my $user = $dsl->vars->{'user'}
@@ -19,7 +19,7 @@ register needs_permission => sub {
             or $dsl->app->redirect("/login?failure=\"$error_message\"");
 
         goto &$sub;
-    }
+        }
 };
 
 register needs_role => sub {

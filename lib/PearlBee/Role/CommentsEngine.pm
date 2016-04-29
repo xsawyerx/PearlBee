@@ -1,13 +1,13 @@
 package PearlBee::Role::CommentsEngine;
 use Moo::Role;
 use Types::Standard qw/Str HashRef ConsumerOf/;
-use Carp            qw/croak/;
-use Sub::Quote      qw/quote_sub/;
-use List::Util      qw/first/;
+use Carp qw/croak/;
+use Sub::Quote qw/quote_sub/;
+use List::Util qw/first/;
 
 has template => (
     is       => 'ro',
-    isa      => ConsumerOf['Dancer2::Core::Role::Template'],
+    isa      => ConsumerOf ['Dancer2::Core::Role::Template'],
     required => 1,
 );
 
@@ -44,7 +44,7 @@ has list_comments_template => (
 has comments_dashboard_link => (
     is        => 'ro',
     isa       => Str,
-    lazy      => 1, # you might need it to set the others
+    lazy      => 1,   # you might need it to set the others
     predicate => 1,
     required  => 1,
 );
@@ -55,7 +55,7 @@ my @known_attrs = qw/
     scripts_template
     list_comments_template
     comments_dashboard_link
-/;
+    /;
 
 sub render {
     my ( $self, $chunk ) = @_;
@@ -65,10 +65,9 @@ sub render {
 
     my $predicate = "has_$chunk";
     return $self->$predicate
-           ? $self->template->process( $self->$chunk, {}, { layout => undef } )
-           : '';
+        ? $self->template->process( $self->$chunk, {}, { layout => undef } )
+        : '';
 }
-
 
 no Moo::Role;
 1;

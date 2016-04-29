@@ -1,4 +1,5 @@
 use utf8;
+
 package PearlBee::Model::Schema::Result::PostCategory;
 
 # Created by DBIx::Class::Schema::Loader
@@ -38,10 +39,10 @@ __PACKAGE__->table("post_category");
 =cut
 
 __PACKAGE__->add_columns(
-  "category_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "post_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "category_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "post_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -56,7 +57,7 @@ __PACKAGE__->add_columns(
 
 =cut
 
-__PACKAGE__->set_primary_key("category_id", "post_id");
+__PACKAGE__->set_primary_key( "category_id", "post_id" );
 
 =head1 RELATIONS
 
@@ -69,10 +70,10 @@ Related object: L<PearlBee::Model::Schema::Result::Category>
 =cut
 
 __PACKAGE__->belongs_to(
-  "category",
-  "PearlBee::Model::Schema::Result::Category",
-  { id => "category_id" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+    "category",
+    "PearlBee::Model::Schema::Result::Category",
+    { id            => "category_id" },
+    { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 post
@@ -84,16 +85,14 @@ Related object: L<PearlBee::Model::Schema::Result::Post>
 =cut
 
 __PACKAGE__->belongs_to(
-  "post",
-  "PearlBee::Model::Schema::Result::Post",
-  { id => "post_id" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+    "post",
+    "PearlBee::Model::Schema::Result::Post",
+    { id            => "post_id" },
+    { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-23 16:54:04
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GlRzlmZ9MHtXA6TCm+l1qg
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

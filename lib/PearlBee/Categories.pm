@@ -1,4 +1,5 @@
 package PearlBee::Categories;
+
 # ABSTRACT: Categories-related paths
 use Dancer2 appname => 'PearlBee';
 
