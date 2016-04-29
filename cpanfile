@@ -1,7 +1,3 @@
-# Apparently, MooseX::Types::LoadableClass fails to declare this dependency,
-# and a bunch of stuff breaks because of this on some particular setups.
-requires 'TAP::Harness::Env';
-
 requires 'Moose';
 requires 'Dancer2' => 0.163000;
 requires 'Dancer2::Plugin::DBIC';
