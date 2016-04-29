@@ -28,6 +28,7 @@ template: "template_toolkit"
 engines:
   template:
     template_toolkit:
+      extension: 'tt'
       encoding: 'utf8'
       start_tag: '[%'
       end_tag:   '%]'
@@ -41,12 +42,11 @@ plugins:
           dsn: dbi:mysql:PearlBee
           schema_class: PearlBee::Model::Schema
           user: root
-          pass: mysqlpassword
+          password: mysqlpassword
           options:
             RaiseError: 1
             PrintError: 1
             mysql_enable_utf8: 1
-
 
 permissions:
     author:
@@ -83,6 +83,11 @@ permissions:
           - delete_user
           - allow_user
           - import
+
+comments: disqus
+comments_engines:
+    disqus:
+        shortname: mydisqusshortname
 
 # Constants
 captcha_folder :  'public/captcha/'

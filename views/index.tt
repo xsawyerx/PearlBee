@@ -45,10 +45,7 @@
                       </div>
                     [% END %]
 
-                    [% SET nr_of_comments = post.nr_of_comments %]
-                    <div class="block_elements">
-                      <i class="icon-comment"></i> <a href="/posts/[% post.slug %][% settings.static && '.html' %]#comments">[% nr_of_comments %] [% IF (nr_of_comments == 1) %] Comment [% ELSE %] Comments [% END %]</a></span>
-                    </div>
+                    [% comments_engine.render("post_comment_count_template") %]
                  </div>
                  
                  <!-- Post cover -->

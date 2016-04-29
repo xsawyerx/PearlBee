@@ -1,4 +1,5 @@
 package PearlBee;
+
 # ABSTRACT: PearlBee Blog platform
 use Dancer2 0.163000;
 use Dancer2::Plugin::DBIC;
@@ -25,6 +26,7 @@ use PearlBee::Authors;
 use PearlBee::Categories;
 use PearlBee::Tags;
 use if !$PearlBee::is_static, 'PearlBee::Dashboard';
+use PearlBee::Comments;
 
 hook before => sub {
     my $settings = resultset('Setting')->first;

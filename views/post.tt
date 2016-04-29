@@ -26,11 +26,7 @@
                                 </div>
                             [% END %]
 
-                            [% SET nr_of_comments = post.nr_of_comments %]
-                            <div class="block_elements">
-                                <i class="icon-comment"></i>
-                                <a href="#comments">[% nr_of_comments %] [% IF (nr_of_comments == 1) %] comment [% ELSE %] Comments [% END %]</a>
-                            </div
+                            [% comments_engine.render("post_comment_count_template") %]
                         </div>
 
                         <!-- Thumbnail -->
@@ -47,12 +43,12 @@
                     </div>
                     
                     <!-- Comment posting -->
-                    [% IF ! settings.static %]
-                    [% INCLUDE comment_form.tt %]
+                    [% IF ! settings.static -%]
+                    [%- comments_engine.render("comment_form_template") -%]
                     [% END %]
                 
                     <!-- Comment section -->
-                    [% INCLUDE list_comments.tt %]
+                    [%- comments_engine.render("list_comments_template") -%]
                 </div>
             </div>
         </div>

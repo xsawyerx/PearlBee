@@ -1,4 +1,5 @@
-requires 'Moose';
+requires 'Moo';
+requires 'Type::Tiny';
 requires 'Dancer2' => 0.163000;
 requires 'Dancer2::Plugin::DBIC';
 requires 'Dancer2::Plugin::REST';
@@ -7,6 +8,7 @@ requires 'RBAC::Tiny' => 0.003;
 requires 'DBIx::Class';
 requires 'HTML::Strip';
 requires 'Template::Plugin::HTML::Strip';
+requires 'Module::Runtime';
 
 requires 'DateTime';
 requires 'DateTime::TimeZone';
@@ -57,4 +59,9 @@ feature 'wp_import', 'Import posts from WordPress' => sub {
     requires 'LWP::UserAgent';
     requires 'LWP::Simple';
     requires 'File::Path';
+};
+
+on 'develop' => sub {
+    requires 'Code::TidyAll';
+    requires 'Text::Diff' => 1.44;
 };
