@@ -5,17 +5,14 @@ use PearlBee::Comments::Builtin::Dashboard;
 
 with 'PearlBee::Role::CommentsEngine';
 
-has '+post_comment_count_template' => (
-    default => sub { 'comments/builtin/post_comment_count.tt' },
-);
+has '+post_comment_count_template' =>
+    ( default => sub {'comments/builtin/post_comment_count'}, );
 
-has '+comment_form_template' => (
-    default => sub { 'comments/builtin/comment_form.tt' },
-);
+has '+comment_form_template' =>
+    ( default => sub {'comments/builtin/comment_form'}, );
 
-has '+list_comments_template' => (
-    default => sub { 'comments/builtin/list_comments.tt' },
-);
+has '+list_comments_template' =>
+    ( default => sub {'comments/builtin/list_comments'}, );
 
 has '+comments_dashboard_link' => (
     default => sub { $_[0]->_app_config->{app_url} . '/dashboard/comments' },

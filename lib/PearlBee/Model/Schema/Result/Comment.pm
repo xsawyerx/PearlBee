@@ -223,8 +223,8 @@ sub replies {
     my $replies = $self->result_source->resultset->search(
         {
             # FIXME: reply_to should really be a proper foreign key
-            reply_to => $self->id,
-            status   => 'approved',
+            reply_to    => $self->id,
+            'me.status' => 'approved',
         },
         {
             order_by   => { -asc => "comment_date" },
