@@ -14,6 +14,10 @@ BEGIN {
     set rbac => RBAC::Tiny->new( roles => config()->{'permissions'} || {} );
 
     our $is_static = config->{static} || '';
+
+    # some defaults
+    setting( posts_on_page => 5 ) if !config->{posts_on_page};
+    setting( pages_per_set => 7 ) if !config->{pages_per_set};
 }
 
 # has to be *after* the configuration is set above

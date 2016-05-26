@@ -39,7 +39,7 @@ prefix '/dashboard/users' => sub {
     get '/?' => needs_permission view_user => sub {
         my $page       = query_parameters->{'page'} || 1;
         my $status     = query_parameters->{'status'};
-        my $nr_of_rows = 5;
+        my $nr_of_rows = config->{posts_on_page};
 
         my $search_parameters = {};
 
@@ -93,7 +93,7 @@ prefix '/dashboard/users' => sub {
         my $total_users    = $all;
         my $posts_per_page = $nr_of_rows;
         my $current_page   = $page;
-        my $pages_per_set  = 7;
+        my $pages_per_set  = config->{pages_per_set};
         my $pagination
             = generate_pagination_numbering( $total_users, $posts_per_page,
             $current_page, $pages_per_set );

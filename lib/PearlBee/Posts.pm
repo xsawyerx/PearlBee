@@ -10,8 +10,7 @@ use PearlBee::Helpers::Captcha;
 
 prefix '/posts' => sub {
     get '' => sub {
-        my $nr_of_rows
-            = config->{'posts_on_page'} || 5; # Number of posts per page
+        my $nr_of_rows = config->{'posts_on_page'};
         my $page = query_parameters->{'page'} || 1; # for paging
         my @posts = resultset('Post')->search(
             { status => 'published' },
