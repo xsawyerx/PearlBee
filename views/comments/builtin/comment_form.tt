@@ -8,7 +8,7 @@
         [% IF vars.user.username %]
             
             <div class="form-group">
-                Comment as <b><i class="icon-user"></i> <a href="/posts/user/[% vars.user.username %]">[% vars.user.username %]</a></b>
+                Comment as <b><i class="icon-user"></i> <a href="[% vars.user.uri %]">[% vars.user.username %]</a></b>
                 <input type="hidden" name="comment_as" email" value="[% vars.user.id %]" />
             </div>
         

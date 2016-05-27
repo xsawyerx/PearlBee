@@ -85,14 +85,14 @@
 									[% END %]
 								</td>
 
-								<td width="15%"> <a href="/posts/[% comment.post.slug %]"> [% comment.post.title %] </a> </td>
+								<td width="15%"> <a href="[% comment.post.uri %]"> [% comment.post.title %] </a> </td>
 								
 								 <td width="10%">
 									[% IF comment.reply_to %]
-    								   <a href="/posts/[% comment.post.slug %]#comment_[% comment.reply_to %]"> Reply </a>
+    								   <a href="[% comment.post.uri %]#comment_[% comment.reply_to %]"> Reply </a>
 									[% ELSE %]
 									   [% IF comment.status == 'approved' %]
-										  <a href="/posts/[% comment.post.slug %]#comment_[% comment.id %]"> Comment </a>
+										  <a href="[% comment.post.uri %]#comment_[% comment.id %]"> Comment </a>
 									   [% ELSE %]
 										  Comment
 									   [% END %]

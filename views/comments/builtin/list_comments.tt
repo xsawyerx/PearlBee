@@ -15,7 +15,7 @@
                     </div>
                 [% ELSE %]
                     <div class="comment-author comment-author-registered">
-                        <i class="icon-user"></i> <a href="/posts/user/[% comment.uid.username %][% settings.static && '.html' %]" >[% comment.uid.username %]</a>
+                        <i class="icon-user"></i> <a href="[% comment.uid.uri %]" >[% comment.uid.username %]</a>
                     </div>
                 [% END %]
                 
@@ -50,7 +50,7 @@
                                 </div>
                             [% ELSE %]
                                 <div class="comment-author comment-author-registered">
-                                    <i class="icon-user"></i> <a href="/posts/user/[% reply.uid.username %][% settings.static && '.html' %]" >[% reply.uid.username %]</a>
+                                    <i class="icon-user"></i> <a href="[% reply.uid.uri %]" >[% reply.uid.username %]</a>
                                 </div>
                             [% END %]
                             

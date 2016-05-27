@@ -41,7 +41,7 @@
 
                   <tr>
                     <td width="20%">
-                      <b> <i class="icon-user"></i> <a href="/posts/user/[% post.user.username %]">[% post.user.username %]</a></b>
+                      <b> <i class="icon-user"></i> <a href="[% post.user.uri %]">[% post.user.username %]</a></b>
                       <br />
                       <b> [% post.user.first_name %] [% post.user.last_name %] </b>
                       <br />
@@ -49,7 +49,7 @@
                     </td>
 
                     <td width="25%"> 
-                      <b> <a href="/posts/[% post.slug %]"> [% post.title %] </a> </b>
+                      <b> <a href="[% post.uri %]"> [% post.title %] </a> </b>
                       <br />
                       <br />
 
@@ -78,23 +78,23 @@
 
                     <td>
                         [% FOREACH post_category IN post.post_categories %]
-                          <a href="/posts/category/[% post_category.category.slug %]"> [% post_category.category.name %] </a>
+                          <a href="[% post_category.category.uri %]"> [% post_category.category.name %] </a>
                         [% END %]
                     </td>
 
                     <td width="5%"> 
                       [% FOREACH post_tag IN post.post_tags %]
-                        <a href="/posts/tag/[% post_tag.tag.slug %]"> [% post_tag.tag.name %] </a>
+                        <a href="[% post_tag.tag.uri %]"> [% post_tag.tag.name %] </a>
                       [% END %]
                     </td>
 
                     <td width="5"> 
-                      <a href="/posts/[% post.slug %]#comments"> [% post.nr_of_comments %] </a>
+                      <a href="[% post.uri %]#comments"> [% post.nr_of_comments %] </a>
                     </td>
                     
                     <td width="10%">
-                       <a href="/posts/[% post.slug %]"> <button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button> </a>
-                       <a href="/dashboard/posts/edit/[% post.slug %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
+                       <a href="[% post.uri %]"> <button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button> </a>
+                       <a href="[% post.edit_uri %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
                    </td>
                   </tr>
 

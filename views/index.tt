@@ -28,7 +28,7 @@
             [% END %]
             [% FOREACH post in posts %]
               <div class="entry">
-                 <h2><a href="/posts/[% post.slug %][% settings.static && '.html' %]">[% post.title %]</a></h2>
+                 <h2><a href="[% post.uri %]">[% post.title %]</a></h2>
                  
                  <!-- Meta details -->
                  <div class="meta">
@@ -36,12 +36,12 @@
                       <i class="icon-calendar"></i> [% post.created_date %]
                     </div>
                     <div class="block_elements">
-                      <i class="icon-user"></i> <a href="/posts/user/[% post.user.username %][% settings.static && '.html' %]">[% post.user.username %]</a>
+                      <i class="icon-user"></i> <a href="[% post.user.uri %]">[% post.user.username %]</a>
                     </div>
                     
                     [% FOREACH category in post.post_categories %]
                       <div class="block_elements">
-                        <i class="icon-list"></i> <a href="[% session.app_url %]/posts/category/[% category.category.slug %][% settings.static && '.html' %]">[% category.category.name %]</a>
+                        <i class="icon-list"></i> <a href="[% category.category.uri %]">[% category.category.name %]</a>
                       </div>
                     [% END %]
 
@@ -61,7 +61,7 @@
                  </div>
                  
                  <!-- Read more -->
-                 <a href="[% session.app_url %]/posts/[% post.slug %][% settings.static && '.html' %]" class="btn btn-info">Read More...</a>
+                 <a href="[% post.uri %]" class="btn btn-info">Read More...</a>
               </div>
             [% END %]
             [% IF posts.first %]
