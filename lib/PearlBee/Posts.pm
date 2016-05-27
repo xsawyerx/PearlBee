@@ -4,7 +4,6 @@ package PearlBee::Posts;
 use Dancer2 appname => 'PearlBee';
 use Dancer2::Plugin::DBIC;
 
-use PearlBee::Helpers::Util qw<map_posts>;
 use PearlBee::Helpers::Pagination qw<get_total_pages get_previous_next_link>;
 use PearlBee::Helpers::Captcha;
 
@@ -31,16 +30,13 @@ prefix '/posts' => sub {
         my @popular
             = resultset('View::PopularPosts')->search( {}, { rows => 3 } );
 
-        # extract demo posts info
-        my @mapped_posts = map_posts(@posts);
-
         # Calculate the next and previous page link
         my $total_pages = get_total_pages( $nr_of_posts, $nr_of_rows );
         my ( $previous_link, $next_link )
             = get_previous_next_link( $page, $total_pages );
 
         template 'index' => {
-            posts         => \@mapped_posts,
+            posts         => \@posts,
             recent        => \@recent,
             popular       => \@popular,
             tags          => \@tags,
