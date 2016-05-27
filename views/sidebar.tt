@@ -32,7 +32,7 @@
     <h4 class="widget-head">Tags</h4>
     <ul id="tag-list" class="cf">
       [% FOREACH tag in tags %]
-        <li><a href="[% session.app_url %]/posts/tag/[% tag.slug %][% settings.static && '.html' %]me %]</a></li>
+        <li><a href="[% session.app_url %]/posts/tag/[% tag.slug %][% settings.static && '.html' %]">[% tag.name %]</a></li>
       [% END %]        
     </ul>
   </div>    
