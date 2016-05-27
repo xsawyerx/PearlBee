@@ -86,7 +86,8 @@ sub map_posts {
             'id',           'slug',
             'description',  'cover',
             'created_date', 'status',
-            'user_id',      'nr_of_comments'
+            'user_id',      'nr_of_comments',
+            'uri',          'edit_uri',
             );
 
         # extract a sample from the content (first words)
