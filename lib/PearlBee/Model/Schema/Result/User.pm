@@ -336,7 +336,7 @@ sub allow {
 }
 
 sub uri {
-    '/posts/user/' . $_[0]->username . ( $PearlBee::is_static && '.html ' );
+    '/author/' . $_[0]->username . ( $PearlBee::is_static && '.html ' );
 }
 
 1;
