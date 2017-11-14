@@ -4,18 +4,27 @@ use strict;
 use warnings;
 use Dancer2::Plugin;
 use URI::Escape;
+use RBAC::Tiny;
 
-has 'rbac' => (
+has 'permissions' => (
     'is'          => 'ro',
     'from_config' => 1,
     'default'     => sub { +{} },
 );
 
+has 'rbac' => (
+    'is'      => 'ro',
+    'default' => sub {
+        my $self = shift;
+        return RBAC::Tiny->new( 'roles' => $self->permissions || {} );
+    },
+);
+
 sub needs_permission :PluginKeyword {
     my ( $self, $permission, $sub ) = @_;
     my $rbac          = $self->rbac;
-    my $error_message = uri_escape( $rbac->{'error_message'} )
-        || "You do not have permission ($permission) to access the page";
+    my $error_message
+        = "You do not have permission ($permission) to access the page";
 
     return sub {
         my $user = $self->dsl->vars->{'user'}
